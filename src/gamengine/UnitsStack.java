@@ -6,7 +6,12 @@ public class UnitsStack {
 
     public UnitsStack(Unit unitClass, int unitNumber) {
         this.unitClass = unitClass;
-        this.unitNumber = Math.min(unitNumber, 999999);
+
+        if (0 <= unitNumber && unitNumber <= 999999) {
+            this.unitNumber = unitNumber;
+        } else {
+            throw new IllegalArgumentException("Illegal number of units: " + unitNumber);
+        }
     }
 
     public Unit getUnitClass() {
@@ -17,7 +22,8 @@ public class UnitsStack {
         return unitNumber;
     }
 
-    public String about() {
+    @Override
+    public String toString() {
         return "Units Stack\n" +
                 "\tUnit Class: " + unitClass.getType() + '\n' +
                 "\tUnit Number: " + unitNumber + "\n\n";

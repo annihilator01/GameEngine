@@ -42,7 +42,8 @@ public abstract class Unit {
         return initiative;
     }
 
-    public String about() {
+    @Override
+    public String toString() {
         return "Unit\n" +
                 "\tType: " + type + '\n' +
                 "\tHP: " + HP + '\n' +
