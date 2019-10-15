@@ -1,23 +1,25 @@
 package gamengine;
 
 public class Army {
+    public final int MAX_STACKS_NUM = 6;
     private final UnitsStack[] stacks;
 
     public Army(UnitsStack[] stacks) {
-        if (stacks.length <= 6) {
+        if (stacks.length <= MAX_STACKS_NUM) {
             this.stacks = new UnitsStack[stacks.length];
             System.arraycopy(stacks, 0, this.stacks, 0, stacks.length);
         } else {
-            throw new IllegalArgumentException("Illegal number of army stacks: " +
-                stacks.length);
+            throw new IllegalArgumentException("\nValid number of stacks range: 0-" +
+                    MAX_STACKS_NUM + "\nYour invalid number: " + stacks.length);
         }
     }
 
     public UnitsStack getStack(int i) {
-        if (i < stacks.length) {
-        return stacks[i];
+        if (0 <= i && i < stacks.length) {
+            return stacks[i];
         } else {
-            throw new IllegalArgumentException("Illegal number of stack: " + i);
+            throw new IllegalArgumentException("\nValid stack index range: 0-" +
+                    (stacks.length - 1) + "\nYour invalid index: " + i);
         }
     }
 
@@ -32,7 +34,7 @@ public class Army {
 
         for (int i = 0; i < stacks.length; ++i) {
             toString += "\tStack #" + (i + 1) + ": " + stacks[i].getUnitClass().getType() + " / " +
-                    stacks[i].getUnitNumber() + '\n';
+                    stacks[i].getUnitsNumber() + '\n';
         }
 
         toString += '\n';

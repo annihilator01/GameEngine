@@ -11,10 +11,10 @@ public class Main {
         Unit testUnitLich = new Lich();
         Unit testUnitGriffin = new Griffin();
 
-        System.out.print(testUnitAngel.toString());
-        System.out.print(testUnitDevil.toString());
-        System.out.print(testUnitLich.toString());
-        System.out.print(testUnitGriffin.toString());
+        System.out.print(testUnitAngel);
+        System.out.print(testUnitDevil);
+        System.out.print(testUnitLich);
+        System.out.print(testUnitGriffin);
         // Unit (end)
 
         // UnitsStack (begin)
@@ -23,10 +23,10 @@ public class Main {
         UnitsStack testUnitsStackLich = new UnitsStack(testUnitLich, 1);
         UnitsStack testUnitsStackGriffin = new UnitsStack(testUnitGriffin, 5);
 
-        System.out.print(testUnitsStackAngel.toString());
-        System.out.print(testUnitsStackDevil.toString());
-        System.out.print(testUnitsStackLich.toString());
-        System.out.print(testUnitsStackGriffin.toString());
+        System.out.print(testUnitsStackAngel);
+        System.out.print(testUnitsStackDevil);
+        System.out.print(testUnitsStackLich);
+        System.out.print(testUnitsStackGriffin);
         // UnitsStack (end)
 
         // Army (begin)
@@ -37,7 +37,7 @@ public class Main {
         stacks[3] = testUnitsStackGriffin;
 
         Army army = new Army(stacks);
-        System.out.print(army.toString());
+        System.out.print(army);
         // Army (end)
     }
 }
