@@ -1,6 +1,6 @@
 package gamengine;
 
-public abstract class Unit {
+public class Unit {
     private final String type;
     private final int HP;
     private final int attack;
@@ -16,6 +16,15 @@ public abstract class Unit {
         this.defense = defense;
         this.damage = damage;
         this.initiative = initiative;
+    }
+
+    public Unit(Unit unit) {
+        this.type = unit.type;
+        this.HP = unit.HP;
+        this.attack = unit.attack;
+        this.defense = unit.defense;
+        this.damage = unit.damage;
+        this.initiative = unit.initiative;
     }
 
     public String getType() {

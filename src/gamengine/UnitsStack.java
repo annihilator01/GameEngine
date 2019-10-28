@@ -1,7 +1,7 @@
 package gamengine;
 
 public class UnitsStack {
-    public final int MAX_UNITS_NUM = 999999;
+    public static final int MAX_UNITS_NUM = 999999;
     private final Unit unitClass;
     private final int unitsNumber;
 
