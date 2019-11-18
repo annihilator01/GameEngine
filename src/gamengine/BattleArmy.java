@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class BattleArmy {
     public static final int MAX_STACKS_NUM = 9;
+    private boolean hasGivenUp;
     private ArrayList<BattleUnitsStack> stacks;
 
     public BattleArmy(Army army) {
@@ -12,10 +13,13 @@ public class BattleArmy {
         for (UnitsStack unitsStack : army.getArmy()) {
             stacks.add(new BattleUnitsStack(unitsStack));
         }
+
+        hasGivenUp = false;
     }
 
     public BattleArmy(BattleArmy battleArmy) {
         this.stacks = battleArmy.stacks;
+        this.hasGivenUp = battleArmy.hasGivenUp;
     }
 
     public BattleUnitsStack getBattleStack(int i) {
@@ -28,7 +32,15 @@ public class BattleArmy {
     }
 
     public ArrayList<BattleUnitsStack> getBattleArmy() {
-        return new ArrayList<>(stacks);
+        return stacks;
+    }
+
+    public boolean hasGivenUp() {
+        return hasGivenUp;
+    }
+
+    public void giveUp() {
+        hasGivenUp = true;
     }
 
     public void addBattleUnitsStack(BattleUnitsStack battleUnitsStack) {

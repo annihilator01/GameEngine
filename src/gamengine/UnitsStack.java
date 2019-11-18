@@ -4,8 +4,9 @@ public class UnitsStack {
     public static final int MAX_UNITS_NUM = 999999;
     private final Unit unitClass;
     private final int unitsNumber;
+    private final int armyIndex;
 
-    public UnitsStack(Unit unitClass, int unitsNumber) {
+    public UnitsStack(Unit unitClass, int unitsNumber, int armyIndex) {
         this.unitClass = unitClass;
 
         if (0 <= unitsNumber && unitsNumber <= MAX_UNITS_NUM) {
@@ -13,6 +14,13 @@ public class UnitsStack {
         } else {
             throw new IllegalArgumentException("\nValid number of units range: 0-" +
                     MAX_UNITS_NUM + "\nYour invalid number: " + unitsNumber);
+        }
+
+        if (1 <= armyIndex && armyIndex <= 2) {
+            this.armyIndex = armyIndex;
+        } else {
+            throw new IllegalArgumentException("\nValid index of army range: 1-2" +
+                    "\nYour invalid index: " + armyIndex);
         }
     }
 
@@ -22,6 +30,10 @@ public class UnitsStack {
 
     public int getUnitsNumber() {
         return unitsNumber;
+    }
+
+    public int getArmyIndex() {
+        return armyIndex;
     }
 
     @Override
