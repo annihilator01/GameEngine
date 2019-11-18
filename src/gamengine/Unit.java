@@ -26,7 +26,7 @@ public class Unit {
         this.defense = defense;
         this.damage = new Range(damage.min, damage.max);
         this.initiative = initiative;
-        this.passiveSkills = new ArrayList<>(passiveSkills);
+        this.passiveSkills = (passiveSkills != null) ? new ArrayList<>(passiveSkills) : null;
         this.activeSkill = activeSkill;
     }
 

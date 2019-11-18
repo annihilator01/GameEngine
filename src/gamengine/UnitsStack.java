@@ -24,6 +24,16 @@ public class UnitsStack {
         }
     }
 
+    public UnitsStack(BattleUnitsStack battleUnitsStack) {
+        if (!battleUnitsStack.isDead()) {
+            this.unitClass = battleUnitsStack.getUnitClass();
+            this.unitsNumber = battleUnitsStack.getUnitsNumber();
+            this.armyIndex = battleUnitsStack.getArmyIndex();
+        }
+
+        throw new IllegalArgumentException("\nInvalid argument battleUnitsStack: stack dead");
+    }
+
     public Unit getUnitClass() {
         return unitClass;
     }

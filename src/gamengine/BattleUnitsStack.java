@@ -100,10 +100,10 @@ public class BattleUnitsStack implements Comparable<BattleUnitsStack> {
     @Override
     public int compareTo(BattleUnitsStack other) {
         if (this.getInitiative() > other.getInitiative()) {
-            return 1;
+            return -1;
         } else if (this.getInitiative() == other.getInitiative()) {
             return 0;
         }
-        return -1;
+        return 1;
     }
 }

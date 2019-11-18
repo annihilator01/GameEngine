@@ -27,9 +27,30 @@ public class Battle {
         Collections.sort(initiativeScale);
     }
 
+    public Army convertToArmy(int armyIndex) {
+        ArrayList<UnitsStack> stacks = new ArrayList<>();
+
+        if (armyIndex == 1) {
+            for (BattleUnitsStack battleUnitsStack : battleArmy1.getBattleArmy()) {
+                stacks.add(new UnitsStack(battleUnitsStack));
+            }
+            return new Army(stacks);
+        } else if (armyIndex == 2) {
+            for (BattleUnitsStack battleUnitsStack : battleArmy2.getBattleArmy()) {
+                stacks.add(new UnitsStack(battleUnitsStack));
+            }
+        } else {
+            throw new IllegalArgumentException("\nValid index of army range: 1-2" +
+                "\nYour invalid index: " + armyIndex);
+        }
+
+        return new Army(stacks);
+
+    }
+
     public BattleUnitsStack getCurrentMoveUnitsStack() {
         if (initiativeScale.size() != 0) {
-            return new BattleUnitsStack(initiativeScale.get(0));
+            return initiativeScale.get(0);
         }
         return null;
     }
@@ -51,6 +72,7 @@ public class Battle {
                     }
                 }
 
+                initiativeScale.remove(0);
                 return;
             } else {
                 throw new IllegalArgumentException("\nInvalid argument target: null");
@@ -80,7 +102,7 @@ public class Battle {
         int finalDamage = random.nextInt((int)(totalDamage.max - totalDamage.min) + 1) +
                           (int)totalDamage.min;
         int newTargetUnitsNumber = Math.max(
-                (int)Math.ceil((targetUnitsNumber * targetUnitHP - finalDamage) / (double)targetUnitsNumber),
+                (int)(Math.ceil((targetUnitsNumber * targetUnitHP - finalDamage) / (double)targetUnitsNumber)),
                 0);
 
         target.setUnitsNumber(newTargetUnitsNumber);
@@ -98,8 +120,6 @@ public class Battle {
         }
 
         actor.negateInitiative();
-        initiativeScale.remove(0);
-        initiativeScale.add(actor);
         Collections.sort(initiativeScale);
     }
 
