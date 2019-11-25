@@ -5,9 +5,10 @@ public class BattleUnitsStack implements Comparable<BattleUnitsStack> {
     private final int initialUnitsNumber;
     private int unitsNumber;
     private int armyIndex;
-    private double initiative;
+    private double initiativeChange;
     private double attackChange;
     private double defenseChange;
+    private boolean hasResisted;
     private boolean hasUsedActiveSkill;
 
     public BattleUnitsStack(UnitsStack unitsStack) {
@@ -15,9 +16,10 @@ public class BattleUnitsStack implements Comparable<BattleUnitsStack> {
         this.initialUnitsNumber = unitsStack.getUnitsNumber();
         this.unitsNumber = unitsStack.getUnitsNumber();
         this.armyIndex = unitsStack.getArmyIndex();
-        this.initiative = unitsStack.getUnitClass().getInitiative();
 
+        hasResisted = false;
         hasUsedActiveSkill = false;
+        initiativeChange = 0;
         attackChange = 0;
         defenseChange = 0;
     }
@@ -27,9 +29,10 @@ public class BattleUnitsStack implements Comparable<BattleUnitsStack> {
         this.initialUnitsNumber = battleUnitsStack.unitsNumber;
         this.unitsNumber = battleUnitsStack.unitsNumber;
         this.armyIndex = battleUnitsStack.armyIndex;
-        this.initiative = battleUnitsStack.initiative;
+        this.initiativeChange = battleUnitsStack.initiativeChange;
         this.attackChange = battleUnitsStack.attackChange;
         this.defenseChange = battleUnitsStack.defenseChange;
+        this.hasResisted = battleUnitsStack.hasResisted;
         this.hasUsedActiveSkill = battleUnitsStack.hasUsedActiveSkill;
     }
 
@@ -45,8 +48,8 @@ public class BattleUnitsStack implements Comparable<BattleUnitsStack> {
         return armyIndex;
     }
 
-    public double getInitiative() {
-        return initiative;
+    public double getInitiativeChange() {
+        return initiativeChange;
     }
 
     public double getAttackChange() {
@@ -57,6 +60,10 @@ public class BattleUnitsStack implements Comparable<BattleUnitsStack> {
         return defenseChange;
     }
 
+    public boolean hasResisted() {
+        return hasResisted;
+    }
+
     public boolean hasUsedActiveSkill() {
         return hasUsedActiveSkill;
     }
@@ -65,10 +72,8 @@ public class BattleUnitsStack implements Comparable<BattleUnitsStack> {
         return unitsNumber == 0;
     }
 
-    public void negateInitiative() {
-        if (initiative > 0){
-            initiative *= -1;
-        }
+    public void setInitiativeChange(double change) {
+        initiativeChange = change;
     }
 
     public void setAttackChange(double change) {
@@ -90,18 +95,29 @@ public class BattleUnitsStack implements Comparable<BattleUnitsStack> {
         }
     }
 
+    public void resisted() {
+        hasResisted = true;
+    }
+
+    public void usedActiveSkill() {
+        hasUsedActiveSkill = true;
+    }
+
     @Override
     public String toString() {
         return "Battle Units Stack\n" +
                 "\tUnit Class: " + unitClass.getType() + '\n' +
-                "\tUnits Number: " + unitsNumber + "\n\n";
+                "\tUnits Number: " + unitsNumber + '\n' +
+                "\tArmy Index: " + armyIndex + "\n\n";
     }
 
     @Override
     public int compareTo(BattleUnitsStack other) {
-        if (this.getInitiative() > other.getInitiative()) {
+        double thisInitiative = this.unitClass.getInitiative() + this.initiativeChange;
+        double otherInitiative = other.unitClass.getInitiative() + other.initiativeChange;
+        if (thisInitiative > otherInitiative) {
             return -1;
-        } else if (this.getInitiative() == other.getInitiative()) {
+        } else if (thisInitiative == otherInitiative) {
             return 0;
         }
         return 1;

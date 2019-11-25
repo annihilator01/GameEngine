@@ -50,9 +50,20 @@ public class Main {
 
         // Battle (begin)
         Battle battle = new Battle(army1, army2);
-        System.out.print(battle.getCurrentMoveUnitsStack());
+        System.out.println("#1 " + battle.getBattleArmy1());
+        System.out.println("#2 " + battle.getBattleArmy2());
+
+        System.out.println("Start Scale\n" + battle.initiativeScaleToString());
         battle.wait(battle.getCurrentMoveUnitsStack());
-        System.out.print(battle.getCurrentMoveUnitsStack());
+        battle.wait(battle.getCurrentMoveUnitsStack());
+        battle.useActiveSkill(battle.getCurrentMoveUnitsStack(), battle.getBattleArmy1().getBattleArmy().get(2));
+        battle.defend(battle.getCurrentMoveUnitsStack());
+        battle.attack(battle.getCurrentMoveUnitsStack(), battle.getBattleArmy1().getBattleArmy().get(0), false);
+        battle.attack(battle.getCurrentMoveUnitsStack(), battle.getBattleArmy2().getBattleArmy().get(2), false);
+        System.out.println("End Scale\n" + battle.initiativeScaleToString());
+
+        System.out.println("#1 " + battle.getBattleArmy1());
+        System.out.println("#2 " + battle.getBattleArmy2());
         // Battle (end)
     }
 }

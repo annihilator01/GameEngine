@@ -37,7 +37,7 @@ public class Unit {
         this.defense = unit.defense;
         this.damage = new Range(unit.damage.min, unit.damage.max);
         this.initiative = unit.initiative;
-        this.passiveSkills = new ArrayList<>(unit.passiveSkills);
+        this.passiveSkills = (unit.passiveSkills != null) ? new ArrayList<>(unit.passiveSkills) : null;
         this.activeSkill =unit.activeSkill;
     }
 
@@ -65,8 +65,8 @@ public class Unit {
         return initiative;
     }
 
-    public ArrayList<PassiveSkills> getPassiveSkils() {
-        return new ArrayList<>(passiveSkills);
+    public ArrayList<PassiveSkills> getPassiveSkills() {
+        return (passiveSkills != null) ? new ArrayList<>(passiveSkills) : new ArrayList<>();
     }
 
     public ActiveSkills getActiveSkill() {

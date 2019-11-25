@@ -1,10 +1,8 @@
 package gamengine;
 
-import gamengine.skills.ActiveSkills;
 import gamengine.skills.PassiveSkills;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Random;
 
@@ -20,6 +18,16 @@ public class Battle {
         createInitiativeScale();
     }
 
+    // for tests
+    public BattleArmy getBattleArmy1() {
+        return battleArmy1;
+    }
+
+    public BattleArmy getBattleArmy2() {
+        return battleArmy2;
+    }
+    // for tests
+
     public void createInitiativeScale() {
         initiativeScale = new ArrayList<>();
         initiativeScale.addAll(battleArmy1.getBattleArmy());
@@ -27,21 +35,34 @@ public class Battle {
         Collections.sort(initiativeScale);
     }
 
+    public String initiativeScaleToString() {
+        String toString;
+        toString = "Initiative Scale\n";
+
+        for (int i = 0; i < initiativeScale.size(); i++) {
+            toString += "#" + (i + 1) + ' ' + initiativeScale.get(i).toString();
+        }
+
+        return toString;
+    }
+
     public Army convertToArmy(int armyIndex) {
-        ArrayList<UnitsStack> stacks = new ArrayList<>();
+        BattleArmy battleArmy;
 
         if (armyIndex == 1) {
-            for (BattleUnitsStack battleUnitsStack : battleArmy1.getBattleArmy()) {
-                stacks.add(new UnitsStack(battleUnitsStack));
-            }
-            return new Army(stacks);
+            battleArmy = battleArmy1;
         } else if (armyIndex == 2) {
-            for (BattleUnitsStack battleUnitsStack : battleArmy2.getBattleArmy()) {
-                stacks.add(new UnitsStack(battleUnitsStack));
-            }
+            battleArmy = battleArmy2;
         } else {
             throw new IllegalArgumentException("\nValid index of army range: 1-2" +
                 "\nYour invalid index: " + armyIndex);
+        }
+
+        ArrayList<UnitsStack> stacks = new ArrayList<>();
+        for (BattleUnitsStack battleUnitsStack : battleArmy.getBattleArmy()) {
+            if (!battleUnitsStack.isDead()) {
+                stacks.add(new UnitsStack(battleUnitsStack));
+            }
         }
 
         return new Army(stacks);
@@ -55,20 +76,21 @@ public class Battle {
         return null;
     }
 
-    public void attack(BattleUnitsStack actor, BattleUnitsStack target) {
+    public void attack(BattleUnitsStack actor, BattleUnitsStack target, boolean isCounterAttack) {
         if (actor == null) {
             throw new IllegalArgumentException("\nInvalid argument actor: null");
         }
 
+        // actor attack
         if (target == null) {
-            if (actor.getUnitClass().getPassiveSkils().contains(PassiveSkills.ATTACKALL) &&
-                actor.getUnitClass().getPassiveSkils().contains(PassiveSkills.ENEMYNORESIST)) {
+            if (actor.getUnitClass().getPassiveSkills().contains(PassiveSkills.ATTACKALL) &&
+                actor.getUnitClass().getPassiveSkills().contains(PassiveSkills.ENEMYNORESIST)) {
                 ArrayList<BattleUnitsStack> targetArmy;
                 targetArmy = (actor.getArmyIndex() == 1) ? battleArmy2.getBattleArmy() : battleArmy1.getBattleArmy();
 
                 for (BattleUnitsStack  targetStack : targetArmy) {
                     if (!targetStack.isDead()) {
-                        attack(actor, targetStack);
+                        attack(actor, targetStack, false);
                     }
                 }
 
@@ -79,6 +101,10 @@ public class Battle {
             }
         }
 
+        if (actor.getArmyIndex() == target.getArmyIndex()) {
+            throw new IllegalArgumentException("\nInvalid arguments: actor and target can't be in one army");
+        }
+
         Range totalDamage;
 
         int actorUnitsNumber = actor.getUnitsNumber();
@@ -87,14 +113,20 @@ public class Battle {
 
         int targetUnitsNumber = target.getUnitsNumber();
         int targetUnitHP = target.getUnitClass().getHP();
-        double targetDefense = target.getUnitClass().getDefense() + target.getDefenseChange();
+
+        double targetDefense;
+        if (actor.getUnitClass().getPassiveSkills().contains(PassiveSkills.CLEARSHOT)) {
+            targetDefense = 0;
+        } else {
+            targetDefense = target.getUnitClass().getDefense() + target.getDefenseChange();
+        }
 
         if (actorAttack > targetDefense) {
-            totalDamage = new Range(actorUnitsNumber * actorDamage.min * (1 * 0.5 *(actorAttack - targetDefense)),
-                                    actorUnitsNumber * actorDamage.max * (1 * 0.5 *(actorAttack - targetDefense)));
+            totalDamage = new Range(actorUnitsNumber * actorDamage.min * (1 + 0.05 * (actorAttack - targetDefense)),
+                                    actorUnitsNumber * actorDamage.max * (1 + 0.05 * (actorAttack - targetDefense)));
         } else {
-            totalDamage = new Range(actorUnitsNumber * actorDamage.min / (1 * 0.5 *(targetDefense - actorAttack)),
-                                    actorUnitsNumber * actorDamage.max / (1 * 0.5 *(targetDefense - actorAttack)));
+            totalDamage = new Range(actorUnitsNumber * actorDamage.min / (1 + 0.05 * (targetDefense - actorAttack)),
+                                    actorUnitsNumber * actorDamage.max / (1 + 0.05 * (targetDefense - actorAttack)));
         }
 
 
@@ -102,16 +134,94 @@ public class Battle {
         int finalDamage = random.nextInt((int)(totalDamage.max - totalDamage.min) + 1) +
                           (int)totalDamage.min;
         int newTargetUnitsNumber = Math.max(
-                (int)(Math.ceil((targetUnitsNumber * targetUnitHP - finalDamage) / (double)targetUnitsNumber)),
-                0);
+                (int)(Math.ceil((targetUnitsNumber * targetUnitHP - finalDamage) / (double)targetUnitHP)), 0);
 
         target.setUnitsNumber(newTargetUnitsNumber);
+        if (newTargetUnitsNumber == 0) {
+            initiativeScale.remove(target);
+        }
 
-        // TODO: counter attack
+        // target counter attack
+        if (isCounterAttack ||
+            actor.getUnitClass().getPassiveSkills().contains(PassiveSkills.SHOOTER) ||
+            actor.getUnitClass().getPassiveSkills().contains(PassiveSkills.ENEMYNORESIST) ||
+            target.getUnitClass().getPassiveSkills().contains(PassiveSkills.SHOOTER) ||
+            target.hasResisted() || target.isDead()) {
+            if (!actor.getUnitClass().getPassiveSkills().contains(PassiveSkills.ATTACKALL)) {
+                initiativeScale.remove(0);
+            };
+            return;
+        }
+
+        attack(target, actor, true);
+
+        if (!target.getUnitClass().getPassiveSkills().contains(PassiveSkills.ENDLESSRESISTANCE)) {
+            target.resisted();
+        }
     }
 
     public void useActiveSkill(BattleUnitsStack actor, BattleUnitsStack target) {
-        // TODO: using of active skills
+        if (actor == null) {
+            throw new IllegalArgumentException("\nInvalid argument actor: null");
+        }
+
+        if (actor.getUnitClass().getActiveSkill() == null) {
+            throw new IllegalArgumentException("\nInvalid argument actor: no active skill");
+        }
+
+        if (actor.hasUsedActiveSkill()) {
+            throw new IllegalArgumentException("\nInvalid argument actor: used active skill");
+        }
+
+        if (target == null) {
+            throw new IllegalArgumentException("\nInvalid argument actor: null");
+        }
+
+        if (target == actor) {
+            throw new IllegalArgumentException("\nInvalid arguments: actor and target can't be the same heroes");
+        }
+
+        switch (actor.getUnitClass().getActiveSkill()) {
+            case PUNISHINGHIT:
+                target.setAttackChange(target.getAttackChange() + 12);
+                break;
+            case CURSE:
+                if (target.getUnitClass().getAttack() + target.getAttackChange() - 12 > 0) {
+                    target.setAttackChange(target.getAttackChange() - 12);
+                } else {
+                    target.setAttackChange(-1 * target.getUnitClass().getAttack());
+                }
+                break;
+            case WEAKENING:
+                if (target.getUnitClass().getDefense() + target.getDefenseChange() - 12 > 0) {
+                    target.setDefenseChange(target.getDefenseChange() - 12);
+                } else {
+                    target.setDefenseChange(-1 * target.getUnitClass().getDefense());
+                }
+                break;
+            case ACCELERATION:
+                target.setInitiativeChange(target.getInitiativeChange() +
+                                           0.4 * (target.getUnitClass().getInitiative() + target.getInitiativeChange()));
+                break;
+            case RESURRECTION:
+                if (!target.getUnitClass().getPassiveSkills().contains(PassiveSkills.UNDEAD)) {
+                    throw new IllegalArgumentException("\nInvalid argument target: not undead for resurrection");
+                }
+
+                if (target.isDead()) {
+                    initiativeScale.add(target);
+                    Collections.sort(initiativeScale);
+                }
+
+                int newTargetUnitsNumber = (int)Math.ceil(actor.getUnitsNumber() * 100 / (double)target.getUnitClass().getHP());
+                target.setUnitsNumber(newTargetUnitsNumber);
+                break;
+            default:
+                throw new IllegalArgumentException("\nInvalid active skill: unknown");
+        }
+
+        actor.usedActiveSkill();
+        initiativeScale.remove(0);
     }
 
     public void wait(BattleUnitsStack actor) {
@@ -119,7 +229,12 @@ public class Battle {
             throw new IllegalArgumentException("\nInvalid argument actor: null");
         }
 
-        actor.negateInitiative();
+        if (actor.getUnitClass().getInitiative() + actor.getInitiativeChange() > 0) {
+            actor.setInitiativeChange(-1 * (2 * actor.getUnitClass().getInitiative() + actor.getInitiativeChange()));
+        } else {
+            initiativeScale.remove(0);
+        }
+
         Collections.sort(initiativeScale);
     }
 
@@ -129,7 +244,8 @@ public class Battle {
         }
 
         initiativeScale.remove(0);
-        actor.setDefenseChange(0.3 * actor.getUnitClass().getDefense());
+        actor.setDefenseChange(actor.getDefenseChange() +
+                               0.3 * (actor.getUnitClass().getDefense() + actor.getDefenseChange()));
     }
 
     public void giveUp(BattleArmy battleArmy) {
@@ -148,6 +264,10 @@ public class Battle {
         }
 
         return true;
+    }
+
+    public boolean isInitiativeScaleEmpty() {
+        return initiativeScale.size() == 0;
     }
 
     public boolean isEnded() {

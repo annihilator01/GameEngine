@@ -50,6 +50,7 @@ public class UnitsStack {
     public String toString() {
         return "Units Stack\n" +
                 "\tUnit Class: " + unitClass.getType() + '\n' +
-                "\tUnits Number: " + unitsNumber + "\n\n";
+                "\tUnits Number: " + unitsNumber + '\n' +
+                "\tArmy Index: " + armyIndex + "\n\n";
     }
 }
