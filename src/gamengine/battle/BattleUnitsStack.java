@@ -110,7 +110,7 @@ public class BattleUnitsStack implements Comparable<BattleUnitsStack> {
     public String toString() {
         return "Battle BaseUnits Stack\n" +
                 "\tUnit Class: " + unitClass.getType() + '\n' +
-                "\tBaseUnits Number: " + unitsNumber + '\n' +
+                "\tUnits Number: " + unitsNumber + '\n' +
                 "\tArmy Index: " + armyIndex + "\n\n";
     }
 

@@ -1,0 +1,16 @@
+{
+  "type": "Flash",
+  "HP": "25",
+  "attack": "7",
+  "defense": "4",
+  "damage": {
+    "min": "3",
+    "max": "8"
+  },
+  "initiative": "20",
+  "passiveSkills": [
+    "SHOOTER",
+    "CLEARSHOT"
+  ],
+  "activeSkill": "ACCELERATION"
+}

@@ -9,15 +9,16 @@ import java.io.FilenameFilter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class UnitsLoader {
-    private final ArrayList<Unit> allUnits;
+    private final HashMap<String, Unit> allUnits;
 
     public UnitsLoader () throws Exception {
-        allUnits = new ArrayList<>();
+        allUnits = new HashMap<>();
 
         for (BaseUnits baseUnit : BaseUnits.values()) {
-            allUnits.add(baseUnit.getUnit());
+            allUnits.put(baseUnit.getUnit().getType(), baseUnit.getUnit());
         }
 
 
@@ -45,12 +46,21 @@ public class UnitsLoader {
             String unitStringJSON = new String(Files.readAllBytes(Paths.get(pathFileJSON)));
 
             try {
-                allUnits.add(new Unit(unitStringJSON));
+                Unit tmpUnitFromJSON = new Unit(unitStringJSON);
+                allUnits.put(tmpUnitFromJSON.getType(), tmpUnitFromJSON);
             } catch (JSONException ignored) {}
         }
     }
 
     public ArrayList<Unit> getAllUnits() {
-        return new ArrayList<>(allUnits);
+        return new ArrayList<>(allUnits.values());
+    }
+
+    public Unit createUnit(String unitType) {
+        if (allUnits.containsKey(unitType)) {
+            return new Unit(allUnits.get(unitType));
+        } else {
+            throw new IllegalArgumentException("\nInvalid unit type: doesn't exist neither in base units group nor in mods");
+        }
     }
 }

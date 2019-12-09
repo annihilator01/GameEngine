@@ -41,13 +41,23 @@ public class Unit {
         this.attack = Integer.parseInt(unitJSON.getString("attack"));
         this.defense = Integer.parseInt(unitJSON.getString("defense"));
         this.initiative = Double.parseDouble(unitJSON.getString("initiative"));
-        this.activeSkill = ActiveSkills.valueOf(unitJSON.getString("activeSkill"));
 
+        // active skill
+        ActiveSkills tmpActiveSkill;
+        try {
+            tmpActiveSkill = ActiveSkills.valueOf(unitJSON.getString("activeSkill"));
+        } catch (Exception e) {
+            tmpActiveSkill = null;
+        }
+        this.activeSkill = tmpActiveSkill;
+
+        // damage
         this.damage = new Range(Double.parseDouble(
-                unitJSON.getJSONObject("damage").getString("min")),
-                Double.parseDouble(
-                        unitJSON.getJSONObject("damage").getString("max")));
+                                unitJSON.getJSONObject("damage").getString("min")),
+                            Double.parseDouble(
+                                unitJSON.getJSONObject("damage").getString("max")));
 
+        // passive skills
         ArrayList<PassiveSkills> tmpPassiveSkills;
         try {
             tmpPassiveSkills = new ArrayList<>();
@@ -57,19 +67,18 @@ public class Unit {
             }
 
             if (((tmpPassiveSkills.contains(PassiveSkills.SHOOTER) ||
-                (tmpPassiveSkills.contains(PassiveSkills.ENEMYNOTRESIST))) &&
-                 tmpPassiveSkills.contains(PassiveSkills.ENDLESSRESISTANCE))
-                 ||
-                (tmpPassiveSkills.contains(PassiveSkills.ATTACKALL) &&
-              !(tmpPassiveSkills.contains(PassiveSkills.SHOOTER) ||
-                tmpPassiveSkills.contains(PassiveSkills.ENEMYNOTRESIST)))) {
+                 (tmpPassiveSkills.contains(PassiveSkills.ENEMYNOTRESIST))) &&
+                  tmpPassiveSkills.contains(PassiveSkills.ENDLESSRESISTANCE))
+                  ||
+                 (tmpPassiveSkills.contains(PassiveSkills.ATTACKALL) &&
+                !(tmpPassiveSkills.contains(PassiveSkills.SHOOTER) ||
+                  tmpPassiveSkills.contains(PassiveSkills.ENEMYNOTRESIST)))) {
                 throw new IllegalArgumentException("\nInvalid passive skills combination: " +
                                                    this.type);
             }
         } catch (JSONException e) {
             tmpPassiveSkills = null;
         }
-
         this.passiveSkills = tmpPassiveSkills;
     }
 
