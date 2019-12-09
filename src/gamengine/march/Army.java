@@ -1,28 +1,21 @@
-package gamengine;
+package gamengine.march;
 
 import java.util.ArrayList;
 
-public class BattleArmy {
-    public static final int MAX_STACKS_NUM = 9;
-    private boolean hasGivenUp;
-    private ArrayList<BattleUnitsStack> stacks;
+public class Army {
+    public static final int MAX_STACKS_NUM = 6;
+    private ArrayList<UnitsStack> stacks;
 
-    public BattleArmy(Army army) {
-        stacks = new ArrayList<>();
-
-        for (UnitsStack unitsStack : army.getArmy()) {
-            stacks.add(new BattleUnitsStack(unitsStack));
+    public Army(ArrayList<UnitsStack> stacks) {
+        if (stacks.size() <= MAX_STACKS_NUM) {
+            this.stacks = new ArrayList<>(stacks);
+        } else {
+            throw new IllegalArgumentException("\nValid number of stacks range: 0-" +
+                    MAX_STACKS_NUM + "\nYour invalid number: " + stacks.size());
         }
-
-        hasGivenUp = false;
     }
 
-    public BattleArmy(BattleArmy battleArmy) {
-        this.stacks = battleArmy.stacks;
-        this.hasGivenUp = battleArmy.hasGivenUp;
-    }
-
-    public BattleUnitsStack getBattleStack(int i) {
+    public UnitsStack getStack(int i) {
         if (0 <= i && i < stacks.size()) {
             return stacks.get(i);
         } else {
@@ -31,27 +24,19 @@ public class BattleArmy {
         }
     }
 
-    public ArrayList<BattleUnitsStack> getBattleArmy() {
-        return stacks;
+    public ArrayList<UnitsStack> getArmy() {
+        return new ArrayList<>(stacks);
     }
 
-    public boolean hasGivenUp() {
-        return hasGivenUp;
-    }
-
-    public void giveUp() {
-        hasGivenUp = true;
-    }
-
-    public void addBattleUnitsStack(BattleUnitsStack battleUnitsStack) {
+    public void addUnitsStack(UnitsStack unitsStack) {
         if (stacks.size() + 1 > MAX_STACKS_NUM) {
             throw new IllegalArgumentException("\nNot enough space in the army!");
         }
 
-        stacks.add(battleUnitsStack);
+        stacks.add(unitsStack);
     }
 
-    public void removeBattleUnitsStack(int i) {
+    public void removeUnitsStack(int i) {
         if (i < 0 || i>= stacks.size()) {
             throw new IllegalArgumentException("\nValid stack index range: 0-" +
                     (stacks.size() - 1) + "\nYour invalid index: " + i);
@@ -63,7 +48,7 @@ public class BattleArmy {
     @Override
     public String toString() {
         String toString;
-        toString = "Battle Army\n\t\t\t  Class / Number\n";
+        toString = "Army\n\t\t\t  Class / Number\n";
 
         for (int i = 0; i < stacks.size(); ++i) {
             toString += "\tStack #" + (i + 1) + ": " + stacks.get(i).getUnitClass().getType() + " / " +

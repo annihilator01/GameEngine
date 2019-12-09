@@ -1,4 +1,7 @@
-package gamengine;
+package gamengine.march;
+
+import gamengine.battle.BattleUnitsStack;
+import gamengine.unit.Unit;
 
 public class UnitsStack {
     public static final int MAX_UNITS_NUM = 999999;
@@ -48,9 +51,9 @@ public class UnitsStack {
 
     @Override
     public String toString() {
-        return "Units Stack\n" +
+        return "BaseUnits Stack\n" +
                 "\tUnit Class: " + unitClass.getType() + '\n' +
-                "\tUnits Number: " + unitsNumber + '\n' +
+                "\tBaseUnits Number: " + unitsNumber + '\n' +
                 "\tArmy Index: " + armyIndex + "\n\n";
     }
 }

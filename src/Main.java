@@ -1,19 +1,30 @@
-import gamengine.*;
-import gamengine.units.*;
+import gamengine.UnitsLoader;
+import gamengine.battle.Battle;
+import gamengine.battle.BattleArmy;
+import gamengine.march.Army;
+import gamengine.skills.ActiveSkills;
+import gamengine.skills.PassiveSkills;
+import gamengine.unit.Unit;
+import gamengine.unit.BaseUnits;
+import gamengine.march.UnitsStack;
 
+import java.io.File;
+import java.io.FilenameFilter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
+
+import org.json.*;
 
 public class Main {
     public static void main(String[] args) throws Exception {
         // Unit (begin)
-        Unit testUnitAngel = new Angel();
-        Unit testUnitDevil = new Devil();
-        Unit testUnitLich = new Lich();
-        Unit testUnitGriffin = new Griffin();
-        Unit testUnitFurya = new Furya();
-        Unit testUnitArbalester = new Arbalester();
+        Unit testUnitAngel = BaseUnits.ANGEL.getUnit();
+        Unit testUnitDevil = BaseUnits.DEVIL.getUnit();
+        Unit testUnitLich = BaseUnits.LICH.getUnit();
+        Unit testUnitGriffin = BaseUnits.GRIFFIN.getUnit();
+        Unit testUnitFurya = BaseUnits.FURYA.getUnit();
+        Unit testUnitArbalester = BaseUnits.ARBALESTER.getUnit();
         // Unit (end)
 
         // UnitsStack (begin)
@@ -65,5 +76,10 @@ public class Main {
         System.out.println("#1 " + battle.getBattleArmy1());
         System.out.println("#2 " + battle.getBattleArmy2());
         // Battle (end)
+
+        UnitsLoader ul = new UnitsLoader();
+        for (Unit unit : ul.getAllUnits()) {
+            System.out.println(unit);
+        }
     }
 }

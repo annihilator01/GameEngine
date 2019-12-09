@@ -1,5 +1,8 @@
-package gamengine;
+package gamengine.battle;
 
+import gamengine.*;
+import gamengine.march.Army;
+import gamengine.march.UnitsStack;
 import gamengine.skills.PassiveSkills;
 
 import java.util.ArrayList;
@@ -83,8 +86,7 @@ public class Battle {
 
         // actor attack
         if (target == null) {
-            if (actor.getUnitClass().getPassiveSkills().contains(PassiveSkills.ATTACKALL) &&
-                actor.getUnitClass().getPassiveSkills().contains(PassiveSkills.ENEMYNORESIST)) {
+            if (actor.getUnitClass().getPassiveSkills().contains(PassiveSkills.ATTACKALL)) {
                 ArrayList<BattleUnitsStack> targetArmy;
                 targetArmy = (actor.getArmyIndex() == 1) ? battleArmy2.getBattleArmy() : battleArmy1.getBattleArmy();
 
@@ -144,12 +146,12 @@ public class Battle {
         // target counter attack
         if (isCounterAttack ||
             actor.getUnitClass().getPassiveSkills().contains(PassiveSkills.SHOOTER) ||
-            actor.getUnitClass().getPassiveSkills().contains(PassiveSkills.ENEMYNORESIST) ||
+            actor.getUnitClass().getPassiveSkills().contains(PassiveSkills.ENEMYNOTRESIST) ||
             target.getUnitClass().getPassiveSkills().contains(PassiveSkills.SHOOTER) ||
             target.hasResisted() || target.isDead()) {
             if (!actor.getUnitClass().getPassiveSkills().contains(PassiveSkills.ATTACKALL)) {
                 initiativeScale.remove(0);
-            };
+            }
             return;
         }
 

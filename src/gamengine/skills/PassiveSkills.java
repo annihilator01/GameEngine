@@ -4,7 +4,7 @@ public enum PassiveSkills {
     SHOOTER,
     CLEARSHOT,
     UNDEAD,
-    ENEMYNORESIST,
+    ENEMYNOTRESIST,
     ATTACKALL,
     ENDLESSRESISTANCE
 }

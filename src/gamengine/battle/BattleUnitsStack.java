@@ -1,4 +1,7 @@
-package gamengine;
+package gamengine.battle;
+
+import gamengine.unit.Unit;
+import gamengine.march.UnitsStack;
 
 public class BattleUnitsStack implements Comparable<BattleUnitsStack> {
     private final Unit unitClass;
@@ -105,9 +108,9 @@ public class BattleUnitsStack implements Comparable<BattleUnitsStack> {
 
     @Override
     public String toString() {
-        return "Battle Units Stack\n" +
+        return "Battle BaseUnits Stack\n" +
                 "\tUnit Class: " + unitClass.getType() + '\n' +
-                "\tUnits Number: " + unitsNumber + '\n' +
+                "\tBaseUnits Number: " + unitsNumber + '\n' +
                 "\tArmy Index: " + armyIndex + "\n\n";
     }
 

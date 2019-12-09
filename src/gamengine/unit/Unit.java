@@ -1,9 +1,12 @@
-package gamengine;
+package gamengine.unit;
 
 import java.util.ArrayList;
 
+import gamengine.Range;
 import gamengine.skills.ActiveSkills;
 import gamengine.skills.PassiveSkills;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class Unit {
@@ -16,7 +19,7 @@ public class Unit {
     private final ArrayList<PassiveSkills> passiveSkills;
     private final ActiveSkills activeSkill;
 
-    protected Unit(String type, int HP, int attack, int defense,
+    Unit(String type, int HP, int attack, int defense,
                    Range damage, double initiative,
                    ArrayList<PassiveSkills> passiveSkills,
                    ActiveSkills activeSkill) {
@@ -28,6 +31,46 @@ public class Unit {
         this.initiative = initiative;
         this.passiveSkills = (passiveSkills != null) ? new ArrayList<>(passiveSkills) : null;
         this.activeSkill = activeSkill;
+    }
+
+    public Unit(String unitStringJSON) {
+        JSONObject unitJSON = new JSONObject(unitStringJSON);
+
+        this.type = unitJSON.getString("type");
+        this.HP = Integer.parseInt(unitJSON.getString("HP"));
+        this.attack = Integer.parseInt(unitJSON.getString("attack"));
+        this.defense = Integer.parseInt(unitJSON.getString("defense"));
+        this.initiative = Double.parseDouble(unitJSON.getString("initiative"));
+        this.activeSkill = ActiveSkills.valueOf(unitJSON.getString("activeSkill"));
+
+        this.damage = new Range(Double.parseDouble(
+                unitJSON.getJSONObject("damage").getString("min")),
+                Double.parseDouble(
+                        unitJSON.getJSONObject("damage").getString("max")));
+
+        ArrayList<PassiveSkills> tmpPassiveSkills;
+        try {
+            tmpPassiveSkills = new ArrayList<>();
+
+            for (Object passiveSkill : unitJSON.getJSONArray("passiveSkills")) {
+                tmpPassiveSkills.add(PassiveSkills.valueOf((String)passiveSkill));
+            }
+
+            if (((tmpPassiveSkills.contains(PassiveSkills.SHOOTER) ||
+                (tmpPassiveSkills.contains(PassiveSkills.ENEMYNOTRESIST))) &&
+                 tmpPassiveSkills.contains(PassiveSkills.ENDLESSRESISTANCE))
+                 ||
+                (tmpPassiveSkills.contains(PassiveSkills.ATTACKALL) &&
+              !(tmpPassiveSkills.contains(PassiveSkills.SHOOTER) ||
+                tmpPassiveSkills.contains(PassiveSkills.ENEMYNOTRESIST)))) {
+                throw new IllegalArgumentException("\nInvalid passive skills combination: " +
+                                                   this.type);
+            }
+        } catch (JSONException e) {
+            tmpPassiveSkills = null;
+        }
+
+        this.passiveSkills = tmpPassiveSkills;
     }
 
     public Unit(Unit unit) {
@@ -82,7 +125,7 @@ public class Unit {
                 "\tDefense: " + defense + '\n' +
                 "\tDamage: " + damage.min + "-" + damage.max + '\n' +
                 "\tInitiative: " + initiative + '\n' +
-                "\tPassive Skills:" + passiveSkills.toString() + '\n' +
-                "\tActive Skill:" + activeSkill.toString() + "\n\n";
+                "\tPassive Skills: " + ((passiveSkills != null ) ? passiveSkills.toString() : "[null]") + '\n' +
+                "\tActive Skill: " + ((activeSkill != null ) ? activeSkill.toString() : "null") + "\n\n";
     }
 }
