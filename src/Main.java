@@ -46,7 +46,7 @@ public class Main {
         // army (end)
 
         // Battle (begin)
-        Battle battle = new Battle(army1, army2);
+        Battle battle = new Battle(army1, army2, "gyg", "gyg");
         System.out.println("#1 " + battle.getBattleArmy1());
         System.out.println("#2 " + battle.getBattleArmy2());
 

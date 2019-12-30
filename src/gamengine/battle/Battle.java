@@ -12,16 +12,19 @@ import java.util.Random;
 public class Battle {
     private BattleArmy battleArmy1;
     private BattleArmy battleArmy2;
+    private String namePlayer1;
+    private String namePlayer2;
     private ArrayList<BattleUnitsStack> initiativeScale;
 
 
-    public Battle(Army army1, Army army2) {
+    public Battle(Army army1, Army army2, String namePlayer1, String namePlayer2) {
         this.battleArmy1 = new BattleArmy(army1);
         this.battleArmy2 = new BattleArmy(army2);
+        this.namePlayer1 = namePlayer1;
+        this.namePlayer2 = namePlayer2;
         createInitiativeScale();
     }
 
-    // for tests
     public BattleArmy getBattleArmy1() {
         return battleArmy1;
     }
@@ -29,7 +32,14 @@ public class Battle {
     public BattleArmy getBattleArmy2() {
         return battleArmy2;
     }
-    // for tests
+
+    public String getNamePlayer1() {
+        return namePlayer1;
+    }
+
+    public String getNamePlayer2() {
+        return namePlayer2;
+    }
 
     public void createInitiativeScale() {
         initiativeScale = new ArrayList<>();

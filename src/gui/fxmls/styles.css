@@ -1,0 +1,177 @@
+/* start scene */
+.start-background {
+    -fx-background-image: url("../assets/start_theme.jpg");
+    -fx-background-size: 100% 100%;
+}
+
+.start-buttons {
+	-fx-background-color: rgba(100,100,100,0.2);
+	-fx-background-radius: 100;
+	-fx-border-style: solid;
+	-fx-border-color: white;
+	-fx-border-width: 3.5px;
+	-fx-border-radius: 100;
+}
+
+.start-buttons:hover {
+	-fx-background-color: rgba(0,0,0,0.5);
+}
+
+.start-buttons:pressed {
+	-fx-background-color: rgba(0,0,0,0.9);
+}
+
+
+/* selection scene */
+.selection-background {
+    -fx-background-image: url("../assets/blur_theme.jpg");
+    -fx-background-size: 100% 100%;
+}
+
+#AcceptButton {
+    -fx-background-color: rgba(100,100,100,0.2);
+    -fx-background-radius: 100;
+    -fx-border-style: solid;
+    -fx-border-color: linear-gradient(to right, black, white);
+    -fx-border-width: 3.5px;
+    -fx-border-radius: 100;
+}
+
+#AcceptButton:hover {
+	-fx-background-color: rgba(0,0,0,0.5);
+}
+
+#AcceptButton:pressed {
+	-fx-background-color: rgba(0,0,0,0.9);
+}
+
+#NameField1 {
+    -fx-background-color: transparent;
+    -fx-border-color: black;
+    -fx-border-width: 0px 0px 3px 0px;
+    -fx-text-fill: black;
+    -fx-prompt-text-fill: rgba(0,0,0,0.7);
+    -fx-font-size: 15pt;
+    -fx-padding: 0 0 0 0;
+    -fx-font-family: "Berlin Sans FB Demi";
+
+}
+
+#NameField2 {
+    -fx-background-color: transparent;
+    -fx-border-color: white;
+    -fx-border-width: 0px 0px 3px 0px;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: rgba(255,255,255,0.7);
+    -fx-font-size: 15pt;
+    -fx-padding: 0 0 0 0;
+    -fx-font-family: "Berlin Sans FB Demi";
+}
+
+#NameField1:focused {
+    -fx-prompt-text-fill: transparent;
+}
+
+#NameField2:focused {
+    -fx-prompt-text-fill: transparent;
+}
+
+.add-buttons-1 {
+    -fx-background-color: transparent;
+    -fx-border-radius: 50;
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+    -fx-border-style: dashed;
+    -fx-text-fill: black;
+    -fx-font-family: "Berlin Sans FB Demi";
+    -fx-font-size: 15pt;
+}
+
+.add-buttons-2 {
+    -fx-background-color: transparent;
+    -fx-border-radius: 50;
+    -fx-border-color: white;
+    -fx-border-width: 2px;
+    -fx-border-style: dashed;
+    -fx-text-fill: white;
+    -fx-font-family: "Berlin Sans FB Demi";
+    -fx-font-size: 15pt;
+}
+
+.hbox-hero-1 {
+    -fx-background: transparent;
+    -fx-border-color: black;
+    -fx-border-radius: 50;
+    -fx-border-width: 2px;
+}
+
+.hbox-hero-2 {
+    -fx-background: transparent;
+    -fx-border-color: white;
+    -fx-border-radius: 50;
+    -fx-border-width: 2px;
+}
+
+#TextHero1 {
+    -fx-font-family: "Berlin Sans FB Demi";
+    -fx-font-size: 12pt;
+    -fx-fill: black;
+}
+
+#TextHero2 {
+    -fx-font-family: "Berlin Sans FB Demi";
+    -fx-font-size: 12pt;
+    -fx-fill: white;
+}
+
+#Number1 {
+    -fx-background-color: transparent;
+    -fx-border-width: 1px;
+    -fx-border-color: black;
+    -fx-font-family: "Berlin Sans FB Demi";
+    -fx-font-size: 14pt;
+    -fx-text-fill: black;
+    -fx-padding: 0 0 0 0;
+    -fx-alignment: center;
+}
+
+
+#Number2 {
+    -fx-background-color: transparent;
+    -fx-border-width: 1px;
+    -fx-border-color: white;
+    -fx-font-family: "Berlin Sans FB Demi";
+    -fx-font-size: 14pt;
+    -fx-text-fill: white;
+    -fx-padding: 0 0 0 0;
+    -fx-alignment: center;
+}
+
+#Combo {
+    -fx-background-color: white;
+    -fx-font-family: "Berlin Sans FB Demi";
+    -fx-font-size: 10pt;
+}
+
+.error-background {
+    -fx-background-color: black
+}
+
+#ErrorCloseButton {
+	-fx-background-color: rgba(100,100,100,0.2);
+	-fx-background-radius: 100;
+	-fx-border-style: solid;
+	-fx-border-color: white;
+	-fx-border-width: 1.5px;
+	-fx-border-radius: 100;
+}
+
+#ErrorCloseButton:hover {
+	-fx-background-color: rgba(0,0,0,0.5);
+}
+
+#ErrorCloseButton:pressed {
+	-fx-background-color: rgba(255,255,255,0.9);
+	-fx-text-fill: black;
+}
+
