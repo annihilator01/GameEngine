@@ -5,14 +5,14 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="125.0" prefWidth="389.0" styleClass="error-background" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.ErrorController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="125.0" prefWidth="389.0" styleClass="pane" stylesheets="@errorWindow.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.errorwindow.ErrorWindowController">
    <children>
       <Label layoutX="54.0" layoutY="26.0" text="You've entered incorrect data :(" textFill="WHITE">
          <font>
             <Font name="Berlin Sans FB Demi Bold" size="20.0" />
          </font>
       </Label>
-      <Button fx:id="ErrorCloseButton" layoutX="144.0" layoutY="63.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="102.0" text="Close" textFill="WHITE">
+      <Button fx:id="errorCloseButton" layoutX="144.0" layoutY="63.0" mnemonicParsing="false" onAction="#clickOnErrorCloseButton" prefHeight="38.0" prefWidth="102.0" stylesheets="@errorWindow.css" text="Close" textFill="WHITE">
          <font>
             <Font name="Berlin Sans FB Demi Bold" size="20.0" />
          </font>

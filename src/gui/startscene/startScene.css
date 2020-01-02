@@ -1,0 +1,37 @@
+/* fonts */
+@font-face {
+    font-family: "Berlin Sans FB Demi";
+    src: url("../assets/brlnsdb.ttf");
+}
+
+@font-face {
+    font-family: "Neuropol";
+    src: url("../assets/neuropol.ttf");
+}
+
+/* scene elements */
+.pane {
+    -fx-background-image: url("../assets/start_theme.jpg");
+    -fx-background-size: 100% 100%;
+}
+
+.button {
+    -fx-font-family: "Neuropol";
+    -fx-font-size: 62px;
+	-fx-background-color: rgba(100,100,100,0.2);
+	-fx-background-radius: 100;
+	-fx-border-style: solid;
+	-fx-border-color: white;
+	-fx-border-width: 3.5px;
+	-fx-border-radius: 100;
+}
+
+.button:hover {
+	-fx-background-color: rgba(0,0,0,0.5);
+	-fx-font-size: 62px;
+}
+
+.button:pressed {
+	-fx-background-color: rgba(0,0,0,0.9);
+	-fx-font-size: 62px;
+}

@@ -1,5 +1,6 @@
 package gui;
 
+import gamengine.battle.Battle;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,13 +9,14 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class Interface extends Application {
-
     private static Stage mainWindow;
+
+    private static Battle battle;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         mainWindow = primaryStage;
-        Parent root = FXMLLoader.load(getClass().getResource("fxmls/start.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("startscene/startScene.fxml"));
 
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
@@ -30,5 +32,13 @@ public class Interface extends Application {
 
     public static Stage getMainWindow() {
         return mainWindow;
+    }
+
+    public static void setBattle(Battle battle) {
+        Interface.battle = battle;
+    }
+
+    public static Battle getBattle() {
+        return battle;
     }
 }
