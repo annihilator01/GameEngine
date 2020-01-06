@@ -1,31 +1,46 @@
 package gamengine.battle;
 
 import gamengine.march.Army;
-import gamengine.march.UnitsStack;
+import gamengine.march.UnitStack;
 
 import java.util.ArrayList;
 
 public class BattleArmy {
     public static final int MAX_STACKS_NUM = 9;
+    private ArrayList<BattleUnitStack> stacks;
+    private final String playerName;
+    private final int battleArmyIndex;
     private boolean hasGivenUp;
-    private ArrayList<BattleUnitsStack> stacks;
 
     public BattleArmy(Army army) {
         stacks = new ArrayList<>();
 
-        for (UnitsStack unitsStack : army.getArmy()) {
-            stacks.add(new BattleUnitsStack(unitsStack));
+        for (UnitStack unitsStack : army.getArmy()) {
+            stacks.add(new BattleUnitStack(unitsStack));
         }
 
+        playerName = army.getPlayerName();
+        battleArmyIndex = army.getArmyIndex();
         hasGivenUp = false;
     }
 
     public BattleArmy(BattleArmy battleArmy) {
         this.stacks = battleArmy.stacks;
+        this.playerName = battleArmy.getPlayerName();
+        this.battleArmyIndex = battleArmy.getBattleArmyIndex();
         this.hasGivenUp = battleArmy.hasGivenUp;
     }
 
-    public BattleUnitsStack getBattleStack(int i) {
+
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public int getBattleArmyIndex() {
+        return battleArmyIndex;
+    }
+
+    public BattleUnitStack getBattleStack(int i) {
         if (0 <= i && i < stacks.size()) {
             return stacks.get(i);
         } else {
@@ -34,7 +49,7 @@ public class BattleArmy {
         }
     }
 
-    public ArrayList<BattleUnitsStack> getBattleArmy() {
+    public ArrayList<BattleUnitStack> getBattleArmy() {
         return stacks;
     }
 
@@ -46,7 +61,7 @@ public class BattleArmy {
         hasGivenUp = true;
     }
 
-    public void addBattleUnitsStack(BattleUnitsStack battleUnitsStack) {
+    public void addBattleUnitsStack(BattleUnitStack battleUnitsStack) {
         if (stacks.size() + 1 > MAX_STACKS_NUM) {
             throw new IllegalArgumentException("\nNot enough space in the army!");
         }

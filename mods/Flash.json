@@ -12,5 +12,6 @@
     "SHOOTER",
     "CLEARSHOT"
   ],
-  "activeSkill": "ACCELERATION"
+  "activeSkill": "ACCELERATION",
+  "icon": "flash.png"
 }

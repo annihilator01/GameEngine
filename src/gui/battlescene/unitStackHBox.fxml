@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Ellipse?>
+
+<HBox prefHeight="80.0" prefWidth="435.0" stylesheets="@battleScene.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Pane prefHeight="80.0" prefWidth="90.0" styleClass="image-pane" stylesheets="@battleScene.css">
+         <children>
+            <ImageView fitHeight="80.0" fitWidth="90.0" pickOnBounds="true" />
+            <Ellipse centerX="45.0" centerY="40.0" fill="#1f93ff00" radiusX="38.0" radiusY="38.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="3.0" />
+         </children>
+      </Pane>
+      <Label alignment="CENTER" prefHeight="80.0" prefWidth="172.5" text="Label" textAlignment="CENTER" />
+      <Label alignment="CENTER" prefHeight="80.0" prefWidth="172.5" text="Label" textAlignment="CENTER" />
+   </children>
+</HBox>

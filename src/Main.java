@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        UnitsLoader unitsLoader = new UnitsLoader();
+        /*UnitLoader unitsLoader = new UnitLoader();
 
         // units (begin)
         Unit angel = unitsLoader.createUnit("Angel");
@@ -19,24 +19,24 @@ public class Main {
         // units (end)
 
         // units stack (begin)
-        UnitsStack angelStack = new UnitsStack(angel, 13, 1);
-        UnitsStack devilStack = new UnitsStack(devil, 666, 1);
-        UnitsStack flashStack = new UnitsStack(flash, 70, 1);
-        UnitsStack arbalesterStack = new UnitsStack(arbalester, 60, 1);
+        UnitStack angelStack = new UnitStack(angel, 13, 1);
+        UnitStack devilStack = new UnitStack(devil, 666, 1);
+        UnitStack flashStack = new UnitStack(flash, 70, 1);
+        UnitStack arbalesterStack = new UnitStack(arbalester, 60, 1);
 
-        UnitsStack angelStack2 = new UnitsStack(angel, 11, 2);
-        UnitsStack furyaStack = new UnitsStack(furya, 10, 2);
-        UnitsStack rockStack = new UnitsStack(rock, 5, 2);
+        UnitStack angelStack2 = new UnitStack(angel, 11, 2);
+        UnitStack furyaStack = new UnitStack(furya, 10, 2);
+        UnitStack rockStack = new UnitStack(rock, 5, 2);
         // units stack (end)
 
         // army (begin)
-        ArrayList<UnitsStack> stacks1 = new ArrayList<>();
+        ArrayList<UnitStack> stacks1 = new ArrayList<>();
         stacks1.add(angelStack);
         stacks1.add(devilStack);
         stacks1.add(flashStack);
         stacks1.add(arbalesterStack);
 
-        ArrayList<UnitsStack> stacks2 = new ArrayList<>();
+        ArrayList<UnitStack> stacks2 = new ArrayList<>();
         stacks2.add(angelStack2);
         stacks2.add(furyaStack);
         stacks2.add(rockStack);
@@ -65,6 +65,6 @@ public class Main {
 
         System.out.println("#1 " + battle.getBattleArmy1());
         System.out.println("#2 " + battle.getBattleArmy2());
-        // Battle (end)
+        // Battle (end)*/
     }
 }

@@ -1,9 +1,12 @@
 package gamengine.battle;
 
 import gamengine.unit.Unit;
-import gamengine.march.UnitsStack;
+import gamengine.march.UnitStack;
+import javafx.scene.layout.HBox;
 
-public class BattleUnitsStack implements Comparable<BattleUnitsStack> {
+import java.util.ArrayList;
+
+public class BattleUnitStack implements Comparable<BattleUnitStack> {
     private final Unit unitClass;
     private final int initialUnitsNumber;
     private int unitsNumber;
@@ -13,8 +16,9 @@ public class BattleUnitsStack implements Comparable<BattleUnitsStack> {
     private double defenseChange;
     private boolean hasResisted;
     private boolean hasUsedActiveSkill;
+    private HBox battleHBox;
 
-    public BattleUnitsStack(UnitsStack unitsStack) {
+    public BattleUnitStack(UnitStack unitsStack) {
         this.unitClass = unitsStack.getUnitClass();
         this.initialUnitsNumber = unitsStack.getUnitsNumber();
         this.unitsNumber = unitsStack.getUnitsNumber();
@@ -25,9 +29,10 @@ public class BattleUnitsStack implements Comparable<BattleUnitsStack> {
         initiativeChange = 0;
         attackChange = 0;
         defenseChange = 0;
+        battleHBox = null;
     }
 
-    public BattleUnitsStack(BattleUnitsStack battleUnitsStack) {
+    public BattleUnitStack(BattleUnitStack battleUnitsStack) {
         this.unitClass = new Unit(battleUnitsStack.unitClass);
         this.initialUnitsNumber = battleUnitsStack.unitsNumber;
         this.unitsNumber = battleUnitsStack.unitsNumber;
@@ -37,10 +42,15 @@ public class BattleUnitsStack implements Comparable<BattleUnitsStack> {
         this.defenseChange = battleUnitsStack.defenseChange;
         this.hasResisted = battleUnitsStack.hasResisted;
         this.hasUsedActiveSkill = battleUnitsStack.hasUsedActiveSkill;
+        this.battleHBox = battleUnitsStack.battleHBox;
     }
 
     public Unit getUnitClass() {
         return new Unit(unitClass);
+    }
+
+    public int getInitialUnitsNumber() {
+        return initialUnitsNumber;
     }
 
     public int getUnitsNumber() {
@@ -62,6 +72,26 @@ public class BattleUnitsStack implements Comparable<BattleUnitsStack> {
     public double getDefenseChange() {
         return defenseChange;
     }
+
+    public HBox getBattleHBox() {
+        return battleHBox;
+    }
+
+    /* for tableView in BattleSceneController */
+    public double getInitiative() {
+        return initiativeChange + unitClass.getInitiative();
+    }
+
+    public String getType() {
+        return unitClass.getType();
+    }
+
+    public String getActiveSkill() {
+        return unitClass.getActiveSkill() != null ?
+               unitClass.getActiveSkill().getActiveSkillName() :
+               "None";
+    }
+    /*----------------------------------------*/
 
     public boolean hasResisted() {
         return hasResisted;
@@ -87,6 +117,10 @@ public class BattleUnitsStack implements Comparable<BattleUnitsStack> {
         defenseChange = change;
     }
 
+    public void setBattleHBox(HBox newHbox) {
+        battleHBox = newHbox;
+    }
+
     public void setUnitsNumber(int unitsNumber) {
         if (0 <= unitsNumber && unitsNumber <= initialUnitsNumber) {
             this.unitsNumber = unitsNumber;
@@ -108,14 +142,14 @@ public class BattleUnitsStack implements Comparable<BattleUnitsStack> {
 
     @Override
     public String toString() {
-        return "Battle BaseUnits Stack\n" +
+        return "Battle BaseUnit Stack\n" +
                 "\tUnit Class: " + unitClass.getType() + '\n' +
                 "\tUnits Number: " + unitsNumber + '\n' +
                 "\tArmy Index: " + armyIndex + "\n\n";
     }
 
     @Override
-    public int compareTo(BattleUnitsStack other) {
+    public int compareTo(BattleUnitStack other) {
         double thisInitiative = this.unitClass.getInitiative() + this.initiativeChange;
         double otherInitiative = other.unitClass.getInitiative() + other.initiativeChange;
         if (thisInitiative > otherInitiative) {

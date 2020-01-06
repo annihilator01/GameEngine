@@ -4,10 +4,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import gamengine.UnitsLoader;
+import gamengine.UnitLoader;
 import gamengine.battle.Battle;
 import gamengine.march.Army;
-import gamengine.march.UnitsStack;
+import gamengine.march.UnitStack;
+import gamengine.unit.Unit;
 import gui.Interface;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,11 +23,9 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
 public class SelectionSceneController {
-    private UnitsLoader unitsLoader;
+    private UnitLoader unitLoader;
 
     @FXML private TextField nameField1;
     @FXML private TextField nameField2;
@@ -42,7 +41,7 @@ public class SelectionSceneController {
     @FXML
     private void initialize() {
         try {
-            unitsLoader = new UnitsLoader();
+            unitLoader = new UnitLoader();
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(-1);
@@ -51,18 +50,32 @@ public class SelectionSceneController {
 
     @FXML
     private void clickOnAcceptButton() {
-        String name1 = nameField1.getText().equals("") ? "Player1" : nameField1.getText();
-        String name2 = nameField2.getText().equals("") ? "Player2" : nameField2.getText();
-        Army army1 = formArmy(ArmyVBox1, 1);
-        Army army2 = formArmy(ArmyVBox2, 2);
+        String name1 = nameField1.getText().equals("") ? Interface.DEFAULT_PLAYER_NAME_1 : nameField1.getText();
+        String name2 = nameField2.getText().equals("") ? Interface.DEFAULT_PLAYER_NAME_2 : nameField2.getText();
+        Army army1 = formArmy(ArmyVBox1, name1, 1);
+        Army army2 = formArmy(ArmyVBox2, name2, 2);
 
-        if (army1 == null|| army2 == null) {
-            displayError();
+        if (army1 == null || army2 == null) {
+            Interface.displayError("");
             return;
         }
 
         Interface.setBattle(new Battle(army1, army2, name1, name2));
 
+        try {
+            Parent newPane = FXMLLoader.load(getClass().getResource("/gui/battlescene/battleScene.fxml"));
+            Scene newScene = new Scene(newPane);
+            Interface.getMainWindow().setScene(newScene);
+            return;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // test
+        System.out.println(name1 + " " + name2);
+        System.out.println(Interface.getBattle().getBattleArmy1());
+        System.out.println(Interface.getBattle().getBattleArmy2());
+        // test
     }
 
     @FXML
@@ -84,13 +97,15 @@ public class SelectionSceneController {
 
         VBox vBoxLeft = new VBox();
         vBoxLeft.setPrefSize(200, 65);
-        Text heroText = new Text("Type of unit");
+        Text heroText = new Text("Type of units");
         heroText.getStyleClass().add("text-hero-" + armyIndex);
         ComboBox comboBox = new ComboBox();
         comboBox.getStyleClass().add("combo-" + armyIndex);
         comboBox.setPrefWidth(150);
         comboBox.setPromptText("Select...");
-        unitsLoader.getAllUnits().forEach(unit -> comboBox.getItems().add(unit.getType()));
+        comboBox.getItems().addAll(unitLoader.getAllUnits());
+        comboBox.setCellFactory(unitCell -> createUnitCell());
+        comboBox.setButtonCell(createUnitCell());
 
         vBoxLeft.getChildren().addAll(heroText, comboBox);
         vBoxLeft.setAlignment(Pos.CENTER);
@@ -103,6 +118,8 @@ public class SelectionSceneController {
         textField.getStyleClass().add("number-" + armyIndex);
         textField.setPrefHeight(30);
         textField.setMaxWidth(100);
+        allowOnlyNumbers(textField);
+
         vBoxRight.getChildren().addAll(numberText, textField);
         vBoxRight.setAlignment(Pos.CENTER);
 
@@ -133,51 +150,61 @@ public class SelectionSceneController {
         });
     }
 
-    private Army formArmy(VBox mainVBox, int armyIndex) {
+    private Army formArmy(VBox mainVBox, String playerName,  int armyIndex) {
         if (mainVBox.getChildren().size() == 1) {
             return null;
         }
 
-        ArrayList<UnitsStack> unitsStacks = new ArrayList<>();
+        ArrayList<UnitStack> unitsStacks = new ArrayList<>();
         for (Node unitStackHBox: mainVBox.getChildren()) {
             if (!(unitStackHBox instanceof Button)) {
                 VBox unitTypeVBox = (VBox) ((HBox) unitStackHBox).getChildren().get(0);
                 VBox unitNumberVBox = (VBox) ((HBox) unitStackHBox).getChildren().get(1);
 
-                String unitType = (String) ((ComboBox) (unitTypeVBox.getChildren().get(1))).getValue();
-                if (unitType == null) {
+                Unit unit = (Unit) ((ComboBox) (unitTypeVBox.getChildren().get(1))).getValue();
+                if (unit == null) {
                     return null;
                 }
+                String unitType = unit.getType();
 
                 int unitNumber;
                 try {
                     unitNumber = Integer.parseInt(((TextField) unitNumberVBox.getChildren().get(1)).getText());
-                    if (unitNumber <= 0 || unitNumber > UnitsStack.MAX_UNITS_NUM) {
+                    if (unitNumber <= 0 || unitNumber > UnitStack.MAX_UNITS_NUM) {
                         throw new Exception();
                     }
                 } catch (Exception e) {
                     return null;
                 }
 
-                unitsStacks.add(new UnitsStack(unitsLoader.createUnit(unitType), unitNumber, armyIndex));
+                unitsStacks.add(new UnitStack(unitLoader.createUnit(unitType), unitNumber, armyIndex));
             }
         }
 
-        return new Army(unitsStacks);
+        return new Army(unitsStacks, playerName, armyIndex);
     }
 
-    private void displayError() {
-        try {
-            Parent newPane = FXMLLoader.load(getClass().getResource("../errorwindow/errorWindow.fxml"));
-            Scene newScene = new Scene(newPane);
-            Stage newStage = new Stage();
-            newStage.initModality(Modality.WINDOW_MODAL);
-            newStage.initOwner(Interface.getMainWindow());
-            newStage.setTitle("Error");
-            newStage.setScene(newScene);
-            newStage.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private ListCell<Unit> createUnitCell() {
+        return new ListCell<Unit>() {
+            @Override
+            public void updateItem(Unit unit, boolean empty) {
+                super.updateItem(unit, empty);
+                if (unit != null) {
+                    Tooltip toolTip = new Tooltip();
+                    toolTip.setText(unit.toString());
+                    setText(unit.getType());
+
+                    setTooltip(toolTip);
+                }
+            }
+        };
+    }
+
+    private void allowOnlyNumbers(TextField textField) {
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                textField.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
     }
 }

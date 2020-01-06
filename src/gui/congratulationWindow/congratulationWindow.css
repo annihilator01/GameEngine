@@ -6,11 +6,12 @@
 
 /* window elements */
 .pane {
-    -fx-background-color: black;
-    -fx-background-radius: 30;
-    -fx-border-radius: 30;
-    -fx-border-color: white;
-    -fx-border-width: 3px;
+    -fx-background-color: teal;
+    -fx-background-radius: 30px;
+    -fx-border-radius: 30px;
+    -fx-border-color: deeppink;
+    -fx-border-width: 5px;
+    -fx-effect: dropshadow(gaussian, black, 80, 0.5, 0, 0);
 }
 
 .button {
@@ -18,10 +19,11 @@
 	-fx-background-radius: 100;
 	-fx-border-style: solid;
 	-fx-border-color: white;
+	-fx-text-fill: white;
 	-fx-border-width: 1.5px;
 	-fx-border-radius: 100;
 	-fx-font-family: "Berlin Sans FB Demi";
-	-fx-font-size: 20px;
+	-fx-font-size: 35px;
 }
 
 .button:hover {
@@ -35,5 +37,6 @@
 
 .label {
     -fx-font-family: "Berlin Sans FB Demi";
-    -fx-font-size: 23px;
+    -fx-font-size: 70px;
+    -fx-text-fill: gold;
 }

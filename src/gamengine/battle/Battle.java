@@ -2,7 +2,7 @@ package gamengine.battle;
 
 import gamengine.*;
 import gamengine.march.Army;
-import gamengine.march.UnitsStack;
+import gamengine.march.UnitStack;
 import gamengine.skills.PassiveSkills;
 
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ public class Battle {
     private BattleArmy battleArmy2;
     private String namePlayer1;
     private String namePlayer2;
-    private ArrayList<BattleUnitsStack> initiativeScale;
+    private ArrayList<BattleUnitStack> initiativeScale;
 
 
     public Battle(Army army1, Army army2, String namePlayer1, String namePlayer2) {
@@ -33,11 +33,11 @@ public class Battle {
         return battleArmy2;
     }
 
-    public String getNamePlayer1() {
+    public String getPlayerName1() {
         return namePlayer1;
     }
 
-    public String getNamePlayer2() {
+    public String getPlayerName2() {
         return namePlayer2;
     }
 
@@ -46,6 +46,10 @@ public class Battle {
         initiativeScale.addAll(battleArmy1.getBattleArmy());
         initiativeScale.addAll(battleArmy2.getBattleArmy());
         Collections.sort(initiativeScale);
+    }
+
+    public ArrayList<BattleUnitStack> getInitiativeScale() {
+        return initiativeScale;
     }
 
     public String initiativeScaleToString() {
@@ -71,25 +75,25 @@ public class Battle {
                 "\nYour invalid index: " + armyIndex);
         }
 
-        ArrayList<UnitsStack> stacks = new ArrayList<>();
-        for (BattleUnitsStack battleUnitsStack : battleArmy.getBattleArmy()) {
+        ArrayList<UnitStack> stacks = new ArrayList<>();
+        for (BattleUnitStack battleUnitsStack : battleArmy.getBattleArmy()) {
             if (!battleUnitsStack.isDead()) {
-                stacks.add(new UnitsStack(battleUnitsStack));
+                stacks.add(new UnitStack(battleUnitsStack));
             }
         }
 
-        return new Army(stacks);
+        return new Army(stacks, battleArmy.getPlayerName(), armyIndex);
 
     }
 
-    public BattleUnitsStack getCurrentMoveUnitsStack() {
+    public BattleUnitStack getCurrentMoveUnitsStack() {
         if (initiativeScale.size() != 0) {
             return initiativeScale.get(0);
         }
         return null;
     }
 
-    public void attack(BattleUnitsStack actor, BattleUnitsStack target, boolean isCounterAttack) {
+    public void attack(BattleUnitStack actor, BattleUnitStack target, boolean isCounterAttack) {
         if (actor == null) {
             throw new IllegalArgumentException("\nInvalid argument actor: null");
         }
@@ -97,10 +101,10 @@ public class Battle {
         // actor attack
         if (target == null) {
             if (actor.getUnitClass().getPassiveSkills().contains(PassiveSkills.ATTACKALL)) {
-                ArrayList<BattleUnitsStack> targetArmy;
+                ArrayList<BattleUnitStack> targetArmy;
                 targetArmy = (actor.getArmyIndex() == 1) ? battleArmy2.getBattleArmy() : battleArmy1.getBattleArmy();
 
-                for (BattleUnitsStack  targetStack : targetArmy) {
+                for (BattleUnitStack targetStack : targetArmy) {
                     if (!targetStack.isDead()) {
                         attack(actor, targetStack, false);
                     }
@@ -172,7 +176,7 @@ public class Battle {
         }
     }
 
-    public void useActiveSkill(BattleUnitsStack actor, BattleUnitsStack target) {
+    public void useActiveSkill(BattleUnitStack actor, BattleUnitStack target) {
         if (actor == null) {
             throw new IllegalArgumentException("\nInvalid argument actor: null");
         }
@@ -236,7 +240,7 @@ public class Battle {
         initiativeScale.remove(0);
     }
 
-    public void wait(BattleUnitsStack actor) {
+    public void wait(BattleUnitStack actor) {
         if (actor == null) {
             throw new IllegalArgumentException("\nInvalid argument actor: null");
         }
@@ -250,7 +254,7 @@ public class Battle {
         Collections.sort(initiativeScale);
     }
 
-    public void defend(BattleUnitsStack actor) {
+    public void defend(BattleUnitStack actor) {
         if (actor == null) {
             throw new IllegalArgumentException("\nInvalid argument actor: null");
         }
@@ -269,7 +273,7 @@ public class Battle {
     }
 
     public boolean isArmyDead(BattleArmy battleArmy) {
-        for (BattleUnitsStack battleUnitsStack : battleArmy.getBattleArmy()) {
+        for (BattleUnitStack battleUnitsStack : battleArmy.getBattleArmy()) {
             if (!battleUnitsStack.isDead()) {
                 return false;
             }

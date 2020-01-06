@@ -1,15 +1,15 @@
 package gamengine.march;
 
-import gamengine.battle.BattleUnitsStack;
+import gamengine.battle.BattleUnitStack;
 import gamengine.unit.Unit;
 
-public class UnitsStack {
+public class UnitStack {
     public static final int MAX_UNITS_NUM = 999999;
     private final Unit unitClass;
     private final int unitsNumber;
     private final int armyIndex;
 
-    public UnitsStack(Unit unitClass, int unitsNumber, int armyIndex) {
+    public UnitStack(Unit unitClass, int unitsNumber, int armyIndex) {
         this.unitClass = unitClass;
 
         if (0 <= unitsNumber && unitsNumber <= MAX_UNITS_NUM) {
@@ -27,7 +27,7 @@ public class UnitsStack {
         }
     }
 
-    public UnitsStack(BattleUnitsStack battleUnitsStack) {
+    public UnitStack(BattleUnitStack battleUnitsStack) {
         if (!battleUnitsStack.isDead()) {
             this.unitClass = battleUnitsStack.getUnitClass();
             this.unitsNumber = battleUnitsStack.getUnitsNumber();
@@ -51,9 +51,9 @@ public class UnitsStack {
 
     @Override
     public String toString() {
-        return "BaseUnits Stack\n" +
+        return "BaseUnit Stack\n" +
                 "\tUnit Class: " + unitClass.getType() + '\n' +
-                "\tBaseUnits Number: " + unitsNumber + '\n' +
+                "\tBaseUnit Number: " + unitsNumber + '\n' +
                 "\tArmy Index: " + armyIndex + "\n\n";
     }
 }

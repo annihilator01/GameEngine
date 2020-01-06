@@ -19,13 +19,13 @@
          <textFill>
             <LinearGradient endX="0.5952380952380952" endY="0.9047619047619048" startX="0.49047619047619045">
                <stops>
-                  <Stop color="#4a4a4a" />
+                  <Stop color="BLACK" />
                   <Stop color="WHITE" offset="1.0" />
                </stops>
             </LinearGradient>
          </textFill>
       </Label>
-      <Label layoutX="144.0" layoutY="121.0" text="Player #1">
+      <Label layoutX="144.0" layoutY="121.0" style="-fx-text-fill: black;" text="Player #1">
          <font>
             <Font name="Berlin Sans FB Demi Bold" size="44.0" />
          </font>
@@ -63,12 +63,12 @@
             </TextField>
          </children>
       </VBox>
-      <VBox fx:id="ArmyVBox1" layoutX="60.0" layoutY="287.0" prefHeight="400.0" prefWidth="360.0" spacing="2.0">
+      <VBox fx:id="ArmyVBox1" layoutX="60.0" layoutY="285.0" prefHeight="400.0" prefWidth="360.0" spacing="2.0">
          <children>
             <Button fx:id="addButton1" mnemonicParsing="false" onAction="#clickOnAddButton1" prefHeight="65.0" prefWidth="370.0" styleClass="add-button-1" stylesheets="@selectionScene.css" text="+ Add a new unit stack" />
          </children>
       </VBox>
-      <VBox fx:id="ArmyVBox2" layoutX="828.0" layoutY="287.0" prefHeight="400.0" prefWidth="360.0" spacing="2.0">
+      <VBox fx:id="ArmyVBox2" layoutX="828.0" layoutY="285.0" prefHeight="400.0" prefWidth="360.0" spacing="2.0">
          <children>
             <Button fx:id="addButton2" mnemonicParsing="false" onAction="#clickOnAddButton2" prefHeight="65.0" prefWidth="370.0" styleClass="add-button-2" stylesheets="@selectionScene.css" text="+ Add a new unit stack">
                <font>
@@ -76,7 +76,7 @@
                </font></Button>
          </children>
       </VBox>
-      <Button fx:id="acceptButton" layoutX="535.0" layoutY="579.0" mnemonicParsing="false" onAction="#clickOnAcceptButton" styleClass="accept-button" stylesheets="@selectionScene.css" text="Accept">
+      <Button fx:id="acceptButton" layoutX="535.0" layoutY="445.0" mnemonicParsing="false" onAction="#clickOnAcceptButton" styleClass="accept-button" stylesheets="@selectionScene.css" text="Accept">
          <font>
             <Font name="Berlin Sans FB Demi Bold" size="40.0" />
          </font>

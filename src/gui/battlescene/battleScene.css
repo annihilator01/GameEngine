@@ -1,0 +1,216 @@
+/* fonts */
+@font-face {
+    font-family: "Berlin Sans FB Demi";
+    src: url("../assets/brlnsdb.ttf");
+}
+
+/* scene elements */
+.pane {
+    -fx-background-image: url("../assets/blur_theme.jpg");
+    -fx-background-size: 100% 100%;
+}
+
+.title-1 {
+    -fx-text-fill: black;
+}
+
+.title-2 {
+    -fx-text-fill: white;
+}
+
+
+/* initiative scale */
+* {
+    -common-color: gold;
+}
+
+.scale {
+    -fx-font-family: "Berlin Sans FB Demi";
+    -fx-base: transparent;
+    -fx-background-color: rgba(0,0,0,0.4);
+    -fx-background-radius: 20;
+    -fx-border-color: -common-color;
+    -fx-border-width: 3px;
+    -fx-border-radius: 20;
+}
+
+.scale .table-row-cell {
+    -fx-cell-size: 30px;
+    -fx-font-size: 23px;
+}
+
+.scale .label {
+    -fx-text-fill: -common-color;
+}
+
+.scale .cell {
+  -fx-alignment: center;
+  -fx-background-color: transparent;
+  -fx-border-color: transparent;
+  -fx-text-fill: -common-color;
+}
+
+.scale .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: -common-color;
+    -fx-border-width: 0 0 1 0;
+    -fx-font-size: 23px;
+}
+
+.scale .scroll-bar * {
+    -fx-min-width: 0;
+    -fx-pref-width: 0;
+    -fx-max-width: 0;
+
+    -fx-min-height: 0;
+    -fx-pref-height: 0;
+    -fx-max-height: 0;
+}
+
+/* stack hboxes */
+.image-pane {
+    -fx-background-color: transparent;
+}
+
+.image-border-1 {
+    -fx-stroke: white;
+}
+
+.image-border-2 {
+    -fx-stroke: black;
+}
+
+.stack-hbox-1, .stack-hbox-2 {
+    -fx-background-radius: 15;
+}
+
+.stack-hbox-1 {
+    -fx-background-color: black;
+}
+
+.stack-hbox-2 {
+    -fx-background-color: white;
+}
+
+.stack-info-1, .stack-info-2 {
+    -fx-font-family: "Berlin Sans FB Demi";
+    -fx-font-size: 20px;
+}
+
+.stack-info-1 {
+    -fx-text-fill: white;
+}
+
+.stack-info-2 {
+    -fx-text-fill: black;
+}
+
+.battle-tooltip {
+    -fx-font-family: "Berlin Sans FB Demi";
+    -fx-font-size: 16px;
+}
+
+.actor-highlight {
+    -fx-effect: dropshadow(gaussian , lime, 15, 0.7, 0, 0);
+}
+
+.target-highlight {
+    -fx-effect: dropshadow(gaussian , red, 15, 0.7, 0, 0);
+}
+
+/* action buttons */
+.attack-button, .defense-button, .give-up-button, .skill-button , .wait-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-width: 5px;
+    -fx-font-family: "Berlin Sans FB Demi";
+    -fx-font-size: 40px;
+}
+
+/* attack */
+.attack-button {
+    -fx-border-color: orange;
+    -fx-text-fill: orange;
+}
+
+.attack-button:hover {
+    -fx-background-color: rgba(220,160,70,0.3);
+}
+
+.attack-button:pressed {
+    -fx-background-color: orange;
+    -fx-text-fill: #3AAACF;
+}
+
+/* defense */
+.defense-button {
+    -fx-border-color: rgba(190,190,190,1);
+    -fx-text-fill: rgba(190,190,190,1);
+}
+
+.defense-button:hover {
+    -fx-background-color: rgba(128,128,128,0.4);
+}
+
+.defense-button:pressed {
+    -fx-background-color: rgba(190,190,190,1);
+    -fx-text-fill: rgba(65,65,65,1);
+}
+
+/* give up */
+.give-up-button {
+    -fx-border-color: white;
+    -fx-text-fill: white;
+}
+
+.give-up-button:hover {
+    -fx-background-color: rgba(255,255,255,0.3);
+}
+
+.give-up-button:pressed {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+}
+
+/* skill */
+.skill-button {
+    -fx-border-color: rgba(18,210,195,1);
+    -fx-text-fill: rgba(18,210,195,1);
+}
+
+.skill-button:hover {
+    -fx-background-color: rgba(172,253,255,0.3);
+}
+
+.skill-button:pressed {
+    -fx-background-color: rgba(18,210,195,1);
+    -fx-text-fill: rgba(255,164,120,1);
+}
+
+/* wait */
+.wait-button {
+    -fx-border-color: rgba(205,190,180,1);
+    -fx-text-fill: rgba(205,190,180,1);
+}
+
+.wait-button:hover {
+    -fx-background-color: rgba(198,192,183,0.3);
+}
+
+.wait-button:pressed {
+    -fx-background-color: rgba(205,190,180,1);
+    -fx-text-fill: rgba(170,250,255,1);
+}
+
+/* info window */
+.info {
+    -fx-background-color: rgba(250,248,79,1);
+    -fx-border-color: rgba(250,33,78,1);
+    -fx-text-fill: rgba(250,33,78,1);
+    -fx-font-family: "Berlin Sans FB Demi";
+    -fx-font-size: 65px;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-width: 3px;
+}

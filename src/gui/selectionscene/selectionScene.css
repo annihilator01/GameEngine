@@ -4,11 +4,6 @@
     src: url("../assets/brlnsdb.ttf");
 }
 
-@font-face {
-    font-family: "Neuropol";
-    src: url("../assets/neuropol.ttf");
-}
-
 /* scene elements */
 .pane {
     -fx-background-image: url("../assets/blur_theme.jpg");
@@ -19,17 +14,19 @@
     -fx-background-color: rgba(100,100,100,0.2);
     -fx-background-radius: 100;
     -fx-border-style: solid;
-    -fx-border-color: linear-gradient(to right, black, white);
+    -fx-text-fill: springgreen;
+    -fx-border-color: springgreen;
     -fx-border-width: 3.5px;
     -fx-border-radius: 100;
 }
 
 .accept-button:hover {
-	-fx-background-color: rgba(0,0,0,0.5);
+	-fx-background-color: rgba(152,251,152, 0.2);
 }
 
 .accept-button:pressed {
-	-fx-background-color: rgba(0,0,0,0.9);
+	-fx-text-fill: darkolivegreen;
+	-fx-background-color: springgreen;
 }
 
 /* name fields */
@@ -163,7 +160,7 @@
     -fx-border-color: black;
 }
 
-.combo-1 .list-view, .combo-2 > .list-view {
+.combo-1 > .list-view, .combo-2 > .list-view {
     -fx-border-width: 7px;
 }
 
@@ -181,6 +178,14 @@
 
 .combo-2 > .list-cell {
     -fx-text-fill: black;
+}
+
+.combo-1 .combo-box-popup > .list-view {
+    -fx-background-color: white;
+}
+
+.combo-2 .combo-box-popup > .list-view {
+    -fx-background-color: black;
 }
 
 .combo-1 .combo-box-popup .list-cell {

@@ -4,18 +4,30 @@ import java.util.ArrayList;
 
 public class Army {
     public static final int MAX_STACKS_NUM = 6;
-    private ArrayList<UnitsStack> stacks;
+    private ArrayList<UnitStack> stacks;
+    private final String playerName;
+    private final int armyIndex;
 
-    public Army(ArrayList<UnitsStack> stacks) {
+    public Army(ArrayList<UnitStack> stacks, String playerName, int armyIndex) {
         if (stacks.size() <= MAX_STACKS_NUM) {
             this.stacks = new ArrayList<>(stacks);
+            this.playerName = playerName;
+            this.armyIndex = armyIndex;
         } else {
             throw new IllegalArgumentException("\nValid number of stacks range: 0-" +
                     MAX_STACKS_NUM + "\nYour invalid number: " + stacks.size());
         }
     }
 
-    public UnitsStack getStack(int i) {
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public int getArmyIndex() {
+        return armyIndex;
+    }
+
+    public UnitStack getStack(int i) {
         if (0 <= i && i < stacks.size()) {
             return stacks.get(i);
         } else {
@@ -24,11 +36,11 @@ public class Army {
         }
     }
 
-    public ArrayList<UnitsStack> getArmy() {
+    public ArrayList<UnitStack> getArmy() {
         return new ArrayList<>(stacks);
     }
 
-    public void addUnitsStack(UnitsStack unitsStack) {
+    public void addUnitsStack(UnitStack unitsStack) {
         if (stacks.size() + 1 > MAX_STACKS_NUM) {
             throw new IllegalArgumentException("\nNot enough space in the army!");
         }
