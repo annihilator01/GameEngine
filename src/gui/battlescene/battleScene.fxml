@@ -36,44 +36,32 @@
       <HBox layoutX="110.0" layoutY="870.0" prefHeight="100.0" prefWidth="1700.0" spacing="50.0">
          <children>
             <Button fx:id="attackButton" alignment="CENTER" contentDisplay="RIGHT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#clickOnAttackButton" prefHeight="100.0" prefWidth="290.0" styleClass="attack-button" stylesheets="@battleScene.css" text="Attack">
-               <graphic>
-                  <ImageView fitHeight="65.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../assets/attack.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
                <font>
                   <Font size="29.0" />
                </font>
+               <padding>
+                  <Insets right="80.0" />
+               </padding>
             </Button>
             <Button fx:id="defenseButton" alignment="CENTER" contentDisplay="RIGHT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#clickOnDefenseButton" prefHeight="100.0" prefWidth="300.0" styleClass="defense-button" stylesheets="@battleScene.css" text="Defense">
-               <graphic>
-                  <ImageView fitHeight="65.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../assets/defense.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
                <font>
                   <Font size="29.0" />
                </font>
+               <padding>
+                  <Insets right="80.0" />
+               </padding>
             </Button>
             <Button fx:id="activeSkillButton" alignment="CENTER" contentDisplay="RIGHT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#clickOnActiveSkillButton" prefHeight="100.0" prefWidth="355.0" styleClass="skill-button" stylesheets="@battleScene.css" text="Active Skill">
-               <graphic>
-                  <ImageView fitHeight="65.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../assets/skill.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
                <font>
                   <Font size="29.0" />
                </font>
+               <padding>
+                  <Insets right="60.0" />
+               </padding>
             </Button>
             <Button fx:id="waitButton" alignment="CENTER" contentDisplay="RIGHT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#clickOnWaitButton" prefHeight="100.0" prefWidth="250.0" styleClass="wait-button" stylesheets="@battleScene.css" text="Wait">
                <graphic>
-                  <ImageView fitHeight="65.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="65.0" fitWidth="65.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../assets/wait.png" />
                      </image>
@@ -85,7 +73,7 @@
             </Button>
             <Button fx:id="giveUpButton" alignment="CENTER" contentDisplay="RIGHT" graphicTextGap="15.0" mnemonicParsing="false" onAction="#clickOnGiveUpButton" prefHeight="100.0" prefWidth="305.0" styleClass="give-up-button" stylesheets="@battleScene.css" text="Give Up">
                <graphic>
-                  <ImageView fitHeight="65.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="65.0" fitWidth="65.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../assets/give_up.png" />
                      </image>
@@ -97,9 +85,9 @@
             </Button>
          </children>
       </HBox>
-      <VBox layoutX="640.0" layoutY="130.0" prefHeight="590.0" prefWidth="640.0">
+      <VBox layoutX="636.0" layoutY="130.0">
          <children>
-            <Text fill="#ffec1f" strokeType="OUTSIDE" strokeWidth="0.0" text="Initiative Scale" textAlignment="CENTER" wrappingWidth="640.0">
+            <Text fill="#ffec1f" strokeType="OUTSIDE" strokeWidth="0.0" text="Initiative Scale" textAlignment="CENTER" wrappingWidth="648.0">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="50.0" />
                </font>
@@ -107,7 +95,7 @@
                   <Insets bottom="10.0" />
                </VBox.margin>
             </Text>
-            <TableView fx:id="initiativeScale" prefHeight="50.0" prefWidth="640.0" styleClass="scale" stylesheets="@battleScene.css">
+            <TableView fx:id="initiativeScale" styleClass="scale" stylesheets="@battleScene.css">
               <columns>
                 <TableColumn fx:id="unitInitiative" editable="false" prefWidth="125.0" resizable="false" sortable="false" text="Initiative" />
                 <TableColumn fx:id="unitType" editable="false" prefWidth="185.0" resizable="false" sortable="false" text="Unit Type" />

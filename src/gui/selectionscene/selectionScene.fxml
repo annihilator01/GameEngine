@@ -12,7 +12,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1244.0" styleClass="pane" stylesheets="@selectionScene.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.selectionscene.SelectionSceneController">
    <children>
-      <Label layoutX="413.0" layoutY="30.0" text="Raise Your Army!">
+      <Label layoutX="413.0" layoutY="30.0" styleClass="font" text="Raise Your Army!">
          <font>
             <Font name="Berlin Sans FB Demi Bold" size="56.0" />
          </font>
@@ -25,14 +25,14 @@
             </LinearGradient>
          </textFill>
       </Label>
-      <Label layoutX="144.0" layoutY="121.0" style="-fx-text-fill: black;" text="Player #1">
+      <Label layoutX="144.0" layoutY="121.0" style="-fx-text-fill: black;" styleClass="font" text="Player #1">
          <font>
             <Font name="Berlin Sans FB Demi Bold" size="44.0" />
          </font>
       </Label>
       <VBox layoutX="61.0" layoutY="207.0" prefHeight="60.0" prefWidth="360.0">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Name:">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="font" text="Name:">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="22.0" />
                </font>
@@ -44,14 +44,14 @@
             </TextField>
          </children>
       </VBox>
-      <Label layoutX="907.0" layoutY="121.0" text="Player #2" textFill="WHITE">
+      <Label layoutX="907.0" layoutY="121.0" styleClass="font" text="Player #2" textFill="WHITE">
          <font>
             <Font name="Berlin Sans FB Demi Bold" size="44.0" />
          </font>
       </Label>
       <VBox layoutX="824.0" layoutY="207.0" prefHeight="60.0" prefWidth="360.0">
          <children>
-            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Name:">
+            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="font" text="Name:">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="22.0" />
                </font>

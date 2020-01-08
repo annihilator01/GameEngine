@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 
 import gamengine.Range;
-import gamengine.UnitLoader;
 import gamengine.skills.ActiveSkills;
 import gamengine.skills.PassiveSkills;
 import javafx.scene.image.Image;
@@ -31,20 +30,20 @@ public class Unit {
         this.HP = HP;
         this.attack = attack;
         this.defense = defense;
-        this.damage = new Range(damage.min, damage.max);
+        this.damage = new Range(damage.getMin(), damage.getMax());
         this.initiative = initiative;
 
-        this.passiveSkills = (passiveSkills != null) ? new ArrayList<PassiveSkills>(passiveSkills){
+        this.passiveSkills = (passiveSkills != null) ? new ArrayList<>(passiveSkills) {
             @Override
             public String toString() {
                 StringBuilder allPassiveSkills = new StringBuilder();
                 for (int i = 0; i < passiveSkills.size(); i++) {
-                    allPassiveSkills.append(passiveSkills.get(i).getPassiveSkillName());
+                    allPassiveSkills.append(passiveSkills.get(i).getTitle());
                     allPassiveSkills.append((i != passiveSkills.size() - 1) ? ", " : "");
                 }
                 return allPassiveSkills.toString();
             }
-        } : null;
+        } : new ArrayList<>();
 
         this.activeSkill = activeSkill;
         this.icon = icon;
@@ -98,17 +97,17 @@ public class Unit {
         }
 
         ArrayList<PassiveSkills> finalTmpPassiveSkills = tmpPassiveSkills;
-        this.passiveSkills = (tmpPassiveSkills != null) ? new ArrayList<PassiveSkills>(finalTmpPassiveSkills) {
+        this.passiveSkills = (tmpPassiveSkills != null) ? new ArrayList<>(finalTmpPassiveSkills) {
             @Override
             public String toString() {
                 StringBuilder allPassiveSkills = new StringBuilder();
                 for (int i = 0; i < finalTmpPassiveSkills.size(); i++) {
-                    allPassiveSkills.append(finalTmpPassiveSkills.get(i).getPassiveSkillName());
+                    allPassiveSkills.append(finalTmpPassiveSkills.get(i).getTitle());
                     allPassiveSkills.append((i != finalTmpPassiveSkills.size() - 1) ? ", " : "");
                 }
                 return allPassiveSkills.toString();
             }
-        } : null;
+        } : new ArrayList<>();
 
         // icon
         String iconName  = unitJSON.getString("icon");
@@ -125,21 +124,9 @@ public class Unit {
         this.HP = unit.HP;
         this.attack = unit.attack;
         this.defense = unit.defense;
-        this.damage = new Range(unit.damage.min, unit.damage.max);
+        this.damage = new Range(unit.damage.getMin(), unit.damage.getMax());
         this.initiative = unit.initiative;
-
-        this.passiveSkills = (unit.passiveSkills != null) ? new ArrayList<PassiveSkills>(unit.passiveSkills){
-            @Override
-            public String toString() {
-                StringBuilder allPassiveSkills = new StringBuilder();
-                for (int i = 0; i < unit.passiveSkills.size(); i++) {
-                    allPassiveSkills.append(unit.passiveSkills.get(i).getPassiveSkillName());
-                    allPassiveSkills.append((i != unit.passiveSkills.size() - 1) ? ", " : "");
-                }
-                return allPassiveSkills.toString();
-            }
-        } : null;
-
+        this.passiveSkills = unit.passiveSkills;
         this.activeSkill = unit.activeSkill;
         this.icon = unit.icon;
     }
@@ -169,7 +156,17 @@ public class Unit {
     }
 
     public ArrayList<PassiveSkills> getPassiveSkills() {
-        return (passiveSkills != null) ? new ArrayList<>(passiveSkills) : new ArrayList<>();
+        return (passiveSkills != null) ? new ArrayList<PassiveSkills>(passiveSkills){
+            @Override
+            public String toString() {
+                StringBuilder allPassiveSkills = new StringBuilder();
+                for (int i = 0; i < passiveSkills.size(); i++) {
+                    allPassiveSkills.append(passiveSkills.get(i).getTitle());
+                    allPassiveSkills.append((i != passiveSkills.size() - 1) ? ", " : "");
+                }
+                return allPassiveSkills.toString();
+            }
+        } : new ArrayList<>();
     }
 
     public ActiveSkills getActiveSkill() {
@@ -187,9 +184,9 @@ public class Unit {
                 "\tHP: " + HP + '\n' +
                 "\tAttack: " + attack + '\n' +
                 "\tDefense: " + defense + '\n' +
-                "\tDamage: " + damage.min + "-" + damage.max + '\n' +
+                "\tDamage: " + damage.getMin() + "-" + damage.getMax() + '\n' +
                 "\tInitiative: " + initiative + '\n' +
-                "\tPassive Skills: " + ((passiveSkills != null ) ? passiveSkills.toString() : "None") + '\n' +
-                "\tActive Skill: " + ((activeSkill != null ) ? activeSkill.getActiveSkillName() : "None") + "\n\n";
+                "\tPassive Skills: " + ((!passiveSkills.isEmpty()) ? passiveSkills.toString() : "None") + '\n' +
+                "\tActive Skill: " + ((activeSkill != null ) ? activeSkill.getTitle() : "None");
     }
 }

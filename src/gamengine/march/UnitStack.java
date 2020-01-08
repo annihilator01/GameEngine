@@ -6,14 +6,14 @@ import gamengine.unit.Unit;
 public class UnitStack {
     public static final int MAX_UNITS_NUM = 999999;
     private final Unit unitClass;
-    private final int unitsNumber;
     private final int armyIndex;
+    private final int HP;
 
     public UnitStack(Unit unitClass, int unitsNumber, int armyIndex) {
         this.unitClass = unitClass;
 
         if (0 <= unitsNumber && unitsNumber <= MAX_UNITS_NUM) {
-            this.unitsNumber = unitsNumber;
+            this.HP = unitsNumber * unitClass.getHP();
         } else {
             throw new IllegalArgumentException("\nValid number of units range: 0-" +
                     MAX_UNITS_NUM + "\nYour invalid number: " + unitsNumber);
@@ -30,7 +30,7 @@ public class UnitStack {
     public UnitStack(BattleUnitStack battleUnitsStack) {
         if (!battleUnitsStack.isDead()) {
             this.unitClass = battleUnitsStack.getUnitClass();
-            this.unitsNumber = battleUnitsStack.getUnitsNumber();
+            this.HP = battleUnitsStack.getHP();
             this.armyIndex = battleUnitsStack.getArmyIndex();
         }
 
@@ -42,7 +42,7 @@ public class UnitStack {
     }
 
     public int getUnitsNumber() {
-        return unitsNumber;
+        return (int) Math.ceil((double) (HP / unitClass.getHP()));
     }
 
     public int getArmyIndex() {
@@ -53,7 +53,7 @@ public class UnitStack {
     public String toString() {
         return "BaseUnit Stack\n" +
                 "\tUnit Class: " + unitClass.getType() + '\n' +
-                "\tBaseUnit Number: " + unitsNumber + '\n' +
+                "\tBaseUnit Number: " + getUnitsNumber() + '\n' +
                 "\tArmy Index: " + armyIndex + "\n\n";
     }
 }

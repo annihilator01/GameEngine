@@ -1,6 +1,7 @@
 package gui.selectionscene;
 
 import java.io.IOException;
+import java.net.Inet4Address;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -10,6 +11,7 @@ import gamengine.march.Army;
 import gamengine.march.UnitStack;
 import gamengine.unit.Unit;
 import gui.Interface;
+import gui.battlescene.BattleSceneController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -23,6 +25,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 public class SelectionSceneController {
     private UnitLoader unitLoader;
@@ -66,16 +69,13 @@ public class SelectionSceneController {
             Parent newPane = FXMLLoader.load(getClass().getResource("/gui/battlescene/battleScene.fxml"));
             Scene newScene = new Scene(newPane);
             Interface.getMainWindow().setScene(newScene);
-            return;
+            Interface.getMainWindow().hide();
+            Interface.getMainWindow().setMaximized(true);
+            Interface.getMainWindow().show();
+            BattleSceneController.showNewRoundInfo();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        // test
-        System.out.println(name1 + " " + name2);
-        System.out.println(Interface.getBattle().getBattleArmy1());
-        System.out.println(Interface.getBattle().getBattleArmy2());
-        // test
     }
 
     @FXML
@@ -104,8 +104,8 @@ public class SelectionSceneController {
         comboBox.setPrefWidth(150);
         comboBox.setPromptText("Select...");
         comboBox.getItems().addAll(unitLoader.getAllUnits());
-        comboBox.setCellFactory(unitCell -> createUnitCell());
-        comboBox.setButtonCell(createUnitCell());
+        comboBox.setCellFactory(unitCell -> createUnitCell(armyIndex));
+        comboBox.setButtonCell(createUnitCell(armyIndex));
 
         vBoxLeft.getChildren().addAll(heroText, comboBox);
         vBoxLeft.setAlignment(Pos.CENTER);
@@ -184,16 +184,16 @@ public class SelectionSceneController {
         return new Army(unitsStacks, playerName, armyIndex);
     }
 
-    private ListCell<Unit> createUnitCell() {
-        return new ListCell<Unit>() {
+    private ListCell<Unit> createUnitCell(char armyIndex) {
+        return new ListCell<>() {
             @Override
             public void updateItem(Unit unit, boolean empty) {
                 super.updateItem(unit, empty);
                 if (unit != null) {
-                    Tooltip toolTip = new Tooltip();
-                    toolTip.setText(unit.toString());
-                    setText(unit.getType());
+                    Tooltip toolTip = new Tooltip(unit.toString());
+                    toolTip.getStyleClass().add("selection-tooltip-" + armyIndex);
 
+                    setText(unit.getType());
                     setTooltip(toolTip);
                 }
             }

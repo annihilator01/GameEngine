@@ -34,6 +34,10 @@
     -fx-border-radius: 20;
 }
 
+.scale .placeholder {
+    visibility: hidden;
+}
+
 .scale .table-row-cell {
     -fx-cell-size: 30px;
     -fx-font-size: 23px;
@@ -107,15 +111,33 @@
 
 .battle-tooltip {
     -fx-font-family: "Berlin Sans FB Demi";
-    -fx-font-size: 16px;
+    -fx-font-size: 20px;
+    -fx-text-fill: yellow;
+    -fx-show-delay: 500ms;
+    -fx-show-duration: indefinite;
+    -fx-hide-delay: 0ms;
+    -fx-border-color: darkorchid;
+    -fx-border-radius: 30;
+    -fx-border-width: 3px;
+    -fx-background-radius: 30;
+    -fx-background-color: rgba(30,144,255,0.8);
 }
 
+/* highlights */
 .actor-highlight {
-    -fx-effect: dropshadow(gaussian , lime, 15, 0.7, 0, 0);
+    -fx-effect: dropshadow(gaussian, lime, 15, 0.7, 0, 0);
 }
 
 .target-highlight {
-    -fx-effect: dropshadow(gaussian , red, 15, 0.7, 0, 0);
+    -fx-effect: dropshadow(gaussian, red, 15, 0.7, 0, 0);
+}
+
+.dead-highlight {
+    -fx-effect: dropshadow(gaussian, darkblue, 15, 0.7, 0, 0);
+}
+
+.resurrection-highlight {
+    -fx-effect: dropshadow(gaussian, gold, 15, 0.7, 0, 0);
 }
 
 /* action buttons */
@@ -129,7 +151,14 @@
 }
 
 /* attack */
+.attack-button, .attack-button:pressed {
+    -fx-background-size: 70px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: 175px 18px;
+}
+
 .attack-button {
+    -fx-background-image: url("../assets/attack.png");
     -fx-border-color: orange;
     -fx-text-fill: orange;
 }
@@ -139,12 +168,20 @@
 }
 
 .attack-button:pressed {
+    -fx-background-image: url("../assets/attack_pressed.png");
     -fx-background-color: orange;
     -fx-text-fill: #3AAACF;
 }
 
 /* defense */
+.defense-button, .defense-button:pressed {
+    -fx-background-size: 70px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: 195px 15px;
+}
+
 .defense-button {
+    -fx-background-image: url("../assets/defense.png");
     -fx-border-color: rgba(190,190,190,1);
     -fx-text-fill: rgba(190,190,190,1);
 }
@@ -154,6 +191,7 @@
 }
 
 .defense-button:pressed {
+    -fx-background-image: url("../assets/defense_pressed.png");
     -fx-background-color: rgba(190,190,190,1);
     -fx-text-fill: rgba(65,65,65,1);
 }
@@ -174,24 +212,32 @@
 }
 
 /* skill */
+.skill-button, .skill-button:pressed {
+    -fx-background-size: 65px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: 250px 18px;
+}
+
 .skill-button {
+    -fx-background-image: url("../assets/skill.png");
     -fx-border-color: rgba(18,210,195,1);
     -fx-text-fill: rgba(18,210,195,1);
 }
 
 .skill-button:hover {
-    -fx-background-color: rgba(172,253,255,0.3);
+    -fx-background-color: rgba(172,253,255,0.15);
 }
 
 .skill-button:pressed {
+    -fx-background-image: url("../assets/skill_pressed.png");
     -fx-background-color: rgba(18,210,195,1);
-    -fx-text-fill: rgba(255,164,120,1);
+    -fx-text-fill: #d23f12;
 }
 
 /* wait */
 .wait-button {
-    -fx-border-color: rgba(205,190,180,1);
-    -fx-text-fill: rgba(205,190,180,1);
+    -fx-border-color: rgba(205,192,178,1);
+    -fx-text-fill: rgba(205,192,178,1);
 }
 
 .wait-button:hover {
@@ -199,18 +245,18 @@
 }
 
 .wait-button:pressed {
-    -fx-background-color: rgba(205,190,180,1);
-    -fx-text-fill: rgba(170,250,255,1);
+    -fx-background-color: rgba(205,192,178,1);
+    -fx-text-fill: rgba(81,179,179,1);
 }
 
 /* info window */
 .info {
-    -fx-background-color: rgba(250,248,79,1);
+    -fx-background-color: #4dfa21;
     -fx-border-color: rgba(250,33,78,1);
     -fx-text-fill: rgba(250,33,78,1);
     -fx-font-family: "Berlin Sans FB Demi";
     -fx-font-size: 65px;
     -fx-background-radius: 20;
     -fx-border-radius: 20;
-    -fx-border-width: 3px;
+    -fx-border-width: 7px;
 }

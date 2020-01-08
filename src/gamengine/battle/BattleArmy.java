@@ -11,6 +11,7 @@ public class BattleArmy {
     private final String playerName;
     private final int battleArmyIndex;
     private boolean hasGivenUp;
+    private int waitAndDefenseActionsNumberInARow;
 
     public BattleArmy(Army army) {
         stacks = new ArrayList<>();
@@ -22,6 +23,7 @@ public class BattleArmy {
         playerName = army.getPlayerName();
         battleArmyIndex = army.getArmyIndex();
         hasGivenUp = false;
+        waitAndDefenseActionsNumberInARow = 0;
     }
 
     public BattleArmy(BattleArmy battleArmy) {
@@ -29,8 +31,8 @@ public class BattleArmy {
         this.playerName = battleArmy.getPlayerName();
         this.battleArmyIndex = battleArmy.getBattleArmyIndex();
         this.hasGivenUp = battleArmy.hasGivenUp;
+        this.waitAndDefenseActionsNumberInARow = battleArmy.waitAndDefenseActionsNumberInARow;
     }
-
 
     public String getPlayerName() {
         return playerName;
@@ -38,6 +40,17 @@ public class BattleArmy {
 
     public int getBattleArmyIndex() {
         return battleArmyIndex;
+    }
+
+    public int getWaitAndDefenseActionsNumberInARow() {
+        return waitAndDefenseActionsNumberInARow;
+    }
+    public void waitAndDefenseActivated() {
+        waitAndDefenseActionsNumberInARow++;
+    }
+
+    public void resetWaitAndDefenseActionsNumberInARow() {
+        waitAndDefenseActionsNumberInARow = 0;
     }
 
     public BattleUnitStack getBattleStack(int i) {

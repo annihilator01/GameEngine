@@ -1,20 +1,26 @@
 package gamengine.skills;
 
 public enum PassiveSkills {
-    SHOOTER ("Shooter"),
-    CLEARSHOT ("Clearshot"),
-    UNDEAD ("Undead"),
-    ENEMYNOTRESIST ("No Enemy Resistance"),
-    ATTACKALL ("Attack ALL"),
-    ENDLESSRESISTANCE ("Endless Resistance");
+    SHOOTER ("Shooter", "target doesn't launch a counterattack, so doesn't actor"),
+    CLEARSHOT ("Clearshot", "ignores target defense"),
+    UNDEAD ("Undead", "this creature can be resurrected"),
+    ENEMYNOTRESIST ("No Enemy Resistance", "target doesn't launch a counterattack"),
+    ATTACKALL ("Attack ALL", "attack all unit stacks of enemy's army"),
+    ENDLESSRESISTANCE ("Endless Resistance", "this creature always counterattack after being attacked");
 
-    private final String passiveSkillName;
+    private final String title;
+    private final String description;
 
-    PassiveSkills(String passiveSkillName) {
-        this.passiveSkillName = passiveSkillName;
+    PassiveSkills(String title, String description) {
+        this.title = title;
+        this.description = description;
     }
 
-    public String getPassiveSkillName() {
-        return passiveSkillName;
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

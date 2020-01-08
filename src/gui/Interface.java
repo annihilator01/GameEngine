@@ -5,8 +5,11 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -26,7 +29,7 @@ public class Interface extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         mainWindow = primaryStage;
-        Parent root = FXMLLoader.load(getClass().getResource("startscene/startScene.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/gui/startscene/startScene.fxml"));
 
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
@@ -73,6 +76,25 @@ public class Interface extends Application {
             newStage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static void setTextToFitSize(Label label, String text) {
+        String labelFontFamily = label.getFont().getFamily();
+        double labelFontSize = label.getFont().getSize();
+
+        Text tmpText = new Text(text);
+        tmpText.setFont(new Font(labelFontFamily, labelFontSize));
+
+        double textWidth = tmpText.getLayoutBounds().getWidth();
+        double labelWidth = label.getPrefWidth();
+
+        if (textWidth <= labelWidth) {
+            label.setText(text);
+        } else {
+            double newFontSize = labelFontSize * labelWidth / textWidth;
+            label.setText(text);
+            label.setFont(Font.font(labelFontFamily, newFontSize));
         }
     }
 }

@@ -1,34 +1,43 @@
 package gui.battlescene;
 
+import gamengine.battle.Actions;
 import gamengine.battle.Battle;
 import gamengine.battle.BattleArmy;
 import gamengine.battle.BattleUnitStack;
+import gamengine.skills.ActiveSkills;
+import gamengine.skills.PassiveSkills;
 import gui.Interface;
 import javafx.animation.*;
 import javafx.collections.FXCollections;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
+
+import java.util.ArrayList;
 
 public class BattleSceneController {
     private final double DEFAULT_NAME_LABLE_HEIGHT = 60;
@@ -38,10 +47,12 @@ public class BattleSceneController {
     private final String ACTOR_HIGHLIGHT_CLASS = "actor-highlight";
     private final String TARGET_HIGHLISHT_CLASS = "target-highlight";
     private final String DEAD_HIGHLIGHT_CLASS = "dead-highlight";
+    private final String RESURRECTION_HIGHLIGHT_CLASS = "resurrection-highlight";
 
     private Battle battle;
     private HBox selectedHBox;
-    private int roundNumber;
+
+    private static int roundNumber;
 
     @FXML private VBox ArmyVBox1;
     @FXML private VBox ArmyVBox2;
@@ -52,10 +63,16 @@ public class BattleSceneController {
     @FXML private TableColumn<BattleUnitStack, String> unitActiveSkill;
     @FXML private TableColumn<BattleUnitStack, Integer> armyIndex;
 
+    @FXML private Button attackButton;
+    @FXML private Button defenseButton;
+    @FXML private Button activeSkillButton;
+    @FXML private Button waitButton;
+    @FXML private Button giveUpButton;
+
     @FXML
     private void initialize() throws Exception {
         battle = Interface.getBattle();
-        roundNumber = 1;
+        roundNumber = 0;
 
         String title1 = battle.getPlayerName1().equals(Interface.DEFAULT_PLAYER_NAME_1) ?
                         Interface.DEFAULT_PLAYER_NAME_1 + "'s Army" : battle.getPlayerName1() + "'s Army";
@@ -71,9 +88,7 @@ public class BattleSceneController {
 
         initInitiativeScaleSet();
         battle.getCurrentMoveUnitsStack().getBattleHBox().getStyleClass().add(ACTOR_HIGHLIGHT_CLASS);
-
-        Interface.getMainWindow().setMaximized(true);
-        showRoundInfo();
+        setButtonsTooltip();
     }
 
 
@@ -123,7 +138,7 @@ public class BattleSceneController {
             setClickOnUnitStackHBox(newHBox, battleUnitStack);
             battleUnitStack.setBattleHBox(newHBox);
 
-            Tooltip newHBoxTooltip = new Tooltip(battleUnitStack.getUnitClass().toString());
+            Tooltip newHBoxTooltip = new Tooltip(battleUnitStack.toString());
             newHBoxTooltip.getStyleClass().add("battle-tooltip");
             Tooltip.install(newHBox, newHBoxTooltip);
 
@@ -138,18 +153,19 @@ public class BattleSceneController {
                     innerEllipse.getRadiusX() - 2,
                     innerEllipse.getRadiusY() - 2
             );
+
             imageView.setImage(battleUnitStack.getUnitClass().getIcon());
             imageView.setClip(tmpEllipse);
 
-            Label unitType = (Label) newHBox.getChildren().get(1);
-            unitType.getStylesheets().add(getClass().getResource("battleScene.css").toExternalForm());
-            unitType.getStyleClass().add("stack-info-" + armyIndex);
-            unitType.setText("Type of units:\n" + battleUnitStack.getUnitClass().getType());
+            Label unitTypeField = (Label) newHBox.getChildren().get(1);
+            unitTypeField.getStylesheets().add(getClass().getResource("battleScene.css").toExternalForm());
+            unitTypeField.getStyleClass().add("stack-info-" + armyIndex);
+            unitTypeField.setText("Type of units:\n" + battleUnitStack.getUnitClass().getType());
 
-            Label unitNumber = (Label) newHBox.getChildren().get(2);
-            unitNumber.getStylesheets().add(getClass().getResource("battleScene.css").toExternalForm());
-            unitNumber.getStyleClass().add("stack-info-" + armyIndex);
-            unitNumber.setText("Number of units:\n" + battleUnitStack.getUnitsNumber() + " / " +  battleUnitStack.getInitialUnitsNumber());
+            Label unitsNumberField = (Label) newHBox.getChildren().get(2);
+            unitsNumberField.getStylesheets().add(getClass().getResource("battleScene.css").toExternalForm());
+            unitsNumberField.getStyleClass().add("stack-info-" + armyIndex);
+            unitsNumberField.setText("Number of units:\n" + battleUnitStack.getUnitsNumber() + " / " +  battleUnitStack.getInitialUnitsNumber());
 
             mainVBox.getChildren().add(newHBox);
         }
@@ -158,21 +174,37 @@ public class BattleSceneController {
 
     private void setClickOnUnitStackHBox(HBox hBox, BattleUnitStack battleUnitStack) {
         hBox.setOnMouseClicked(event -> {
-            if (event.getButton() == MouseButton.PRIMARY &&
-                hBox != battle.getCurrentMoveUnitsStack().getBattleHBox() &&
-                battle.getInitiativeScale().contains(battleUnitStack) &&
-                hBox != selectedHBox) {
-                if (selectedHBox != null) {
-                    selectedHBox.getStyleClass().remove(TARGET_HIGHLISHT_CLASS);
+            if (event.getButton() != MouseButton.PRIMARY) {
+                return;
+            }
+
+            BattleUnitStack actor = battle.getCurrentMoveUnitsStack();
+            if (hBox != actor.getBattleHBox() && hBox != selectedHBox) {
+                ArrayList<String> styleClasses = new ArrayList<>();
+                styleClasses.add(TARGET_HIGHLISHT_CLASS);
+
+                if (hBox.getStyleClass().contains(DEAD_HIGHLIGHT_CLASS)) {
+                    if (actor.getUnitClass().getActiveSkill() == ActiveSkills.RESURRECTION) {
+                        styleClasses.add(RESURRECTION_HIGHLIGHT_CLASS);
+                    } else {
+                        return;
+                    }
                 }
 
+                if (selectedHBox != null) {
+                    selectedHBox.getStyleClass().remove(TARGET_HIGHLISHT_CLASS);
+                    selectedHBox.getStyleClass().remove(RESURRECTION_HIGHLIGHT_CLASS);
+                }
+
+
                 selectedHBox = hBox;
-                selectedHBox.getStyleClass().add(TARGET_HIGHLISHT_CLASS);
+                selectedHBox.getStyleClass().addAll(styleClasses);
 
                 int unitPriority = battle.getInitiativeScale().indexOf(battleUnitStack);
                 highlightRow(unitPriority, "red");
-            } else if (event.getButton() == MouseButton.PRIMARY && hBox == selectedHBox) {
+            } else if (hBox == selectedHBox) {
                 selectedHBox.getStyleClass().remove(TARGET_HIGHLISHT_CLASS);
+                selectedHBox.getStyleClass().remove(RESURRECTION_HIGHLIGHT_CLASS);
                 selectedHBox = null;
                 highlightRow(0, "");
             }
@@ -190,8 +222,6 @@ public class BattleSceneController {
         setInitiativeScale();
     }
 
-
-
     private void setInitiativeScale() {
         initiativeScale.setItems(FXCollections.observableArrayList(battle.getInitiativeScale()));
         resizeInitiativeScale();
@@ -199,7 +229,7 @@ public class BattleSceneController {
     }
 
     private void resizeInitiativeScale() {
-        initiativeScale.setPrefHeight(battle.getInitiativeScale().size() * 45 + 40);
+        initiativeScale.setPrefHeight(battle.getInitiativeScale().size() * 40 + 52);
     }
 
     private void highlightRow(int unitPriority, String color) {
@@ -227,15 +257,16 @@ public class BattleSceneController {
         });
     }
 
-    private void showRoundInfo() {
+    public static void showNewRoundInfo() {
+        roundNumber++;
         showInfo("Round #" + roundNumber);
     }
 
-    private void showInfo(String info) {
+    private static void showInfo(String info) {
         Pane pane = null;
 
         try {
-            pane = FXMLLoader.load(getClass().getResource("info.fxml"));
+            pane = FXMLLoader.load(BattleSceneController.class.getResource("info.fxml"));
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(-1);
@@ -244,11 +275,13 @@ public class BattleSceneController {
         Label label = (Label) pane.getChildren().get(0);
         label.setText(info);
         label.setAlignment(Pos.CENTER);
+        label.setScaleX(0);
+        label.setScaleY(0);
         label.getStyleClass().add("info");
 
         Scene scene = new Scene(pane);
         scene.setFill(Color.TRANSPARENT);
-        scene.getStylesheets().add(getClass().getResource("battleScene.css").toExternalForm());
+        scene.getStylesheets().add(BattleSceneController.class.getResource("battleScene.css").toExternalForm());
 
         Stage stage = new Stage(StageStyle.TRANSPARENT);
         stage.initOwner(Interface.getMainWindow());
@@ -257,6 +290,7 @@ public class BattleSceneController {
         stage.show();
 
         ScaleTransition increaseTransition = new ScaleTransition(Duration.seconds(1.5), label);
+        increaseTransition.setDelay(new Duration(500));
         increaseTransition.setFromX(0);
         increaseTransition.setFromY(0);
         increaseTransition.setToX(1);
@@ -275,48 +309,181 @@ public class BattleSceneController {
 
     @FXML
     private void clickOnAttackButton() {
+        BattleUnitStack actor = battle.getCurrentMoveUnitsStack();
+        BattleUnitStack target = findBattleUnitStack(selectedHBox);
+
+        if (selectedHBox == null && !actor.getUnitClass().getPassiveSkills().contains(PassiveSkills.ATTACKALL)) {
+            Interface.displayError("Attack requires target!");
+            return;
+        } else if (selectedHBox != null) {
+            if (actor.getArmyIndex() == target.getArmyIndex()) {
+                Interface.displayError("Attack can't be used on allied unit stack!");
+                return;
+            } else if (actor.getUnitClass().getPassiveSkills().contains(PassiveSkills.ATTACKALL)) {
+                Interface.displayError("Attack doesn't require target when passive skill is Attack ALL!");
+                return;
+            } else if (selectedHBox.getStyleClass().contains(RESURRECTION_HIGHLIGHT_CLASS)) {
+                Interface.displayError("Attack can't be used on dead unit stack!");
+                return;
+            }
+        }
+
+        battle.attack(actor, target);
+        afterActionHandler(actor, target, Actions.ATTACK);
     }
 
     @FXML
     private void clickOnDefenseButton() {
+        if (selectedHBox != null) {
+            Interface.displayError("Defense doesn't require target!");
+            return;
+        }
+
+        BattleUnitStack actor = battle.getCurrentMoveUnitsStack();
+
+        if (isWaitAndDefenseForbidden(actor)) {
+            return;
+        }
+
+        battle.defend(actor);
+        afterActionHandler(actor, Actions.DEFENSE);
     }
 
     @FXML
     private void clickOnActiveSkillButton() {
+        BattleUnitStack actor = battle.getCurrentMoveUnitsStack();
+        BattleUnitStack target = findBattleUnitStack(selectedHBox);
+
+        if (actor.getUnitClass().getActiveSkill() == null) {
+            Interface.displayError("Current unit stack doesn't have any active skills!");
+            return;
+        } else if (selectedHBox == null) {
+            Interface.displayError("Active Skill requires target!");
+            return;
+        } else if (actor.getNumberActiveSkillUsed() == Battle.MAX_USE_OF_ACTIVE_SKILL) {
+            Interface.displayError("Active Skill can't be used more than " + Battle.MAX_USE_OF_ACTIVE_SKILL + " times during the battle!");
+            return;
+        }
+
+        // resurrection case handling
+        if (actor.getUnitClass().getActiveSkill() == ActiveSkills.RESURRECTION) {
+            if (!target.getUnitClass().getPassiveSkills().contains(PassiveSkills.UNDEAD)) {
+                Interface.displayError("Resurrection active skill can't be used on not Undead units!");
+                return;
+            } else if (target.getHP() == target.getInitialUnitsNumber() * target.getUnitClass().getHP()) {
+                Interface.displayError("Active Skill can't be used on full HP unit stacks!");
+                return;
+            }
+        }
+
+        battle.useActiveSkill(actor, target);
+        afterActionHandler(actor, target, Actions.ACTIVESKILL);
     }
 
     @FXML
     private void clickOnWaitButton() {
         if (selectedHBox != null) {
-            Interface.displayError("Wait doesn't require target!");
+            Interface.displayError("Waiting doesn't require target!");
             return;
         }
 
-        BattleUnitStack prevMoveBUS = battle.getCurrentMoveUnitsStack();
-        battle.wait(battle.getCurrentMoveUnitsStack());
-        setInitiativeScale();
+        BattleUnitStack actor = battle.getCurrentMoveUnitsStack();
+
+        if (isWaitAndDefenseForbidden(actor)) {
+            return;
+        }
+
+        battle.wait(actor);
+        afterActionHandler(actor, Actions.WAIT);
     }
 
     @FXML
     private void clickOnGiveUpButton() {
-        if (selectedHBox != null) {
-            Interface.displayError("Give Up doesn't require target!");
+        if (true) {
+            showChange(selectedHBox, 22, "/gui/assets/attack.png");
             return;
         }
 
-        BattleUnitStack currentMoveBUS = battle.getCurrentMoveUnitsStack();
+        if (selectedHBox != null) {
+            Interface.displayError("Giving Up doesn't require target!");
+            return;
+        }
 
-        if (currentMoveBUS.getArmyIndex() == 1) {
+        BattleUnitStack actor = battle.getCurrentMoveUnitsStack();
+
+        if (actor.getArmyIndex() == 1) {
             battle.getBattleArmy1().giveUp();
         } else {
             battle.getBattleArmy2().giveUp();
         }
 
-        afterActionHandler(currentMoveBUS);
+        afterActionHandler(actor, Actions.GIVEUP);
     }
 
+    private BattleUnitStack findBattleUnitStack(HBox hBox) {
+        if (hBox == null) {
+            return null;
+        }
 
-    private void afterActionHandler(BattleUnitStack prevMoveBUS) {
+        for (BattleUnitStack battleUnitStack: battle.getAllBattleUnitStacks()) {
+            if (hBox == battleUnitStack.getBattleHBox()) {
+                return battleUnitStack;
+            }
+        }
+
+        return null;
+    }
+
+    private void afterActionHandler(BattleUnitStack actor, Actions action) {
+        afterActionHandler(actor, null, action);
+    }
+
+    private void afterActionHandler(BattleUnitStack actor, BattleUnitStack target, Actions action) {
+        // handler for certain actions
+        switch (action) {
+            case ATTACK:
+                battle.getAllBattleUnitStacks().forEach(battleUnitStack -> {
+                    if (battleUnitStack.getHP() == 0) {
+                        battleUnitStack.getBattleHBox().getStyleClass().add(DEAD_HIGHLIGHT_CLASS);
+                    }
+                });
+            case ACTIVESKILL:
+            case GIVEUP:
+                if (target != null) {
+                    target.getBattleHBox().getStyleClass().removeAll(new ArrayList<String>() {{
+                        add(TARGET_HIGHLISHT_CLASS);
+                        add(RESURRECTION_HIGHLIGHT_CLASS);
+
+                        if (target.getHP() != 0) {
+                            add(DEAD_HIGHLIGHT_CLASS);
+                        }
+                    }});
+                }
+
+                selectedHBox = null;
+                battle.getBattleArmy(actor).resetWaitAndDefenseActionsNumberInARow();
+                break;
+            case DEFENSE:
+            case WAIT:
+                battle.getBattleArmy(actor).waitAndDefenseActivated();
+                break;
+        }
+
+        // updating battle unit stacks HBox info
+        for (BattleUnitStack battleUnitStack: battle.getAllBattleUnitStacks()) {
+            // update number of units info in HBox
+            Label unitsNumberField = (Label) battleUnitStack.getBattleHBox().getChildren().get(2);
+            unitsNumberField.setText("Number of units:\n" + battleUnitStack.getUnitsNumber() + " / " +  battleUnitStack.getInitialUnitsNumber());
+
+            // update HBox tooltip info
+            Tooltip tooltip = new Tooltip(battleUnitStack.toString());
+            tooltip.setShowDelay(new Duration(2000));
+            tooltip.setHideDelay(Duration.INDEFINITE);
+            tooltip.getStyleClass().add("battle-tooltip");
+            Tooltip.install(battleUnitStack.getBattleHBox(), tooltip);
+        }
+
+        // сheck if battle is ended and show screen with congratulations
         if (battle.isEnded()) {
             try {
                 Parent parent = FXMLLoader.load(getClass().getResource("/gui/congratulationwindow/congratulationWindow.fxml"));
@@ -329,16 +496,139 @@ public class BattleSceneController {
                 stage.initOwner(Interface.getMainWindow());
                 stage.setScene(scene);
                 stage.showAndWait();
+                return;
             } catch (Exception e) {
                 e.printStackTrace();
                 System.exit(-1);
             }
         }
 
-        prevMoveBUS.getBattleHBox().getStyleClass().remove(ACTOR_HIGHLIGHT_CLASS);
+        // remove highlight from actor
+        actor.getBattleHBox().getStyleClass().remove(ACTOR_HIGHLIGHT_CLASS);
 
-        if (selectedHBox != null) {
-            selectedHBox.getStyleClass().remove(TARGET_HIGHLISHT_CLASS);
+        // check if new round is started
+        if (battle.getInitiativeScale().isEmpty()) {
+            battle.createInitiativeScale();
+            showNewRoundInfo();
         }
+
+        // set highlight on the current move unit stack
+        battle.getCurrentMoveUnitsStack().getBattleHBox().getStyleClass().add(ACTOR_HIGHLIGHT_CLASS);
+        setInitiativeScale();
+
+        // update buttons tooltip info
+        setButtonsTooltip();
+    }
+
+
+    private void setButtonsTooltip() {
+        BattleUnitStack actor = battle.getCurrentMoveUnitsStack();
+
+        // for attack
+        String tmpAttackTooltip = "Passive Skills\n";
+        if (actor.getUnitClass().getPassiveSkills().isEmpty()) {
+            tmpAttackTooltip = "\n";
+        } else {
+            for (PassiveSkills passiveSkill: actor.getUnitClass().getPassiveSkills()) {
+                tmpAttackTooltip += '\t' + passiveSkill.getTitle() + ": " + passiveSkill.getDescription() + '\n';
+            }
+        }
+
+        final String attackTooltip = tmpAttackTooltip.substring(0, tmpAttackTooltip.length() - 1);
+
+        // for active skill
+        String tmpActiveSkillTooltip = "Active Skill\n\t";
+        if (actor.getUnitClass().getActiveSkill() == null) {
+            tmpActiveSkillTooltip = "";
+        } else {
+            tmpActiveSkillTooltip += actor.getUnitClass().getActiveSkill().getTitle() + ": " + actor.getUnitClass().getActiveSkill().getDescription();
+        }
+
+        final String activeSkillTooltip = tmpActiveSkillTooltip;
+
+
+        ArrayList<Tooltip> tooltips = new ArrayList<>(){{
+            add(new Tooltip(attackTooltip)); // for attack
+            add(new Tooltip("Defense: actor skips the turn (doesn't play in this round)\nand increases own defense by 30%")); // for defense
+            add(new Tooltip(activeSkillTooltip)); // for active skill
+            add(new Tooltip("Wait: actor skips the turn (take turn further in this round)\nand move to the end of the initiative scale, where priority for anticipants is inversive")); // for wait
+        }};
+
+        tooltips.forEach(tooltip -> {
+            tooltip.getStyleClass().add("battle-tooltip");
+        });
+
+        if (!attackTooltip.equals("")) {
+            attackButton.setTooltip(tooltips.get(0));
+        } else {
+            attackButton.setTooltip(null);
+        }
+
+        if (!activeSkillTooltip.equals("")) {
+            activeSkillButton.setTooltip(tooltips.get(2));
+        } else {
+            activeSkillButton.setTooltip(null);
+        }
+
+        defenseButton.setTooltip(tooltips.get(1));
+        waitButton.setTooltip(tooltips.get(3));
+    }
+
+    private boolean isWaitAndDefenseForbidden(BattleUnitStack actor) {
+        BattleArmy actorBattleArmy = battle.getBattleArmy(actor);
+
+        if (actorBattleArmy.getWaitAndDefenseActionsNumberInARow() == Battle.MAX_WAIT_AND_DEFENSE_ACTIONS_IN_A_ROW) {
+            Interface.displayError("Wait and Defense can't be used together more than " + Battle.MAX_WAIT_AND_DEFENSE_ACTIONS_IN_A_ROW + " times in a row!");
+            return true;
+        }
+
+        return false;
+    }
+
+    private void showChange(HBox targetHBox, Number change, String imageURL) {
+        HBox changeHBox = null;
+        try {
+            changeHBox = FXMLLoader.load(getClass().getResource("/gui/battlescene/change.fxml"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
+
+        String styleClass = (change.doubleValue() > 0) ? "change-pos" : "change-neg";
+        String sign = (change.doubleValue() > 0) ? "+" : "";
+
+        Label changeLabel = (Label) changeHBox.getChildren().get(0);
+        changeLabel.setText(sign + change);
+        changeLabel.getStyleClass().add(styleClass);
+
+        ImageView trendImage = (ImageView) changeHBox.getChildren().get(1);
+
+        ImageView characteristicImage = (ImageView) changeHBox.getChildren().get(2);
+        characteristicImage.setImage(new Image(imageURL));
+
+        ((AnchorPane) Interface.getMainWindow().getScene().getRoot()).getChildren().add(changeHBox);
+        Bounds targetHBoxBounds = targetHBox.getParent().localToParent(targetHBox.getBoundsInParent());
+        changeHBox.setLayoutX(targetHBoxBounds.getMinX() + targetHBox.getWidth() / 2);
+        changeHBox.setLayoutY(targetHBoxBounds.getMinY());
+
+        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(2), changeHBox);
+        fadeTransition.setFromValue(1);
+        fadeTransition.setToValue(0);
+        fadeTransition.play();
+
+        Line line = new Line();
+        //Bounds targetHBoxBounds = targetHBox.getParent().localToParent(targetHBox.getBoundsInParent());
+        line.setStartX(targetHBoxBounds.getMinX() + targetHBox.getWidth() / 2);
+        line.setStartY(targetHBoxBounds.getMinY());
+        line.setEndX(targetHBoxBounds.getMinX() + targetHBox.getWidth() / 2);
+        line.setEndY(targetHBoxBounds.getMinY() - 200);
+
+        PathTransition pathTransition = new PathTransition(Duration.seconds(2), line, changeHBox);
+        pathTransition.play();
+
+        final HBox finalChangeHBox = changeHBox;
+        pathTransition.setOnFinished(actionEvent -> {
+            ((AnchorPane) finalChangeHBox.getScene().getRoot()).getChildren().remove(finalChangeHBox);
+        });
     }
 }
