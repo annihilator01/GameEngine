@@ -4,7 +4,6 @@ import gamengine.unit.BaseUnit;
 import gamengine.unit.Unit;
 import org.json.JSONException;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.nio.file.Files;

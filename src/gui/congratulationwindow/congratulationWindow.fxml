@@ -9,9 +9,10 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="mainPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.congratulationwindow.CongratulationWindowController">
+
+<HBox alignment="CENTER" prefHeight="1040.0" prefWidth="1920.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.congratulationwindow.CongratulationWindowController">
    <children>
-      <AnchorPane fx:id="innerPane" focusTraversable="true" layoutX="95.0" layoutY="64.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" styleClass="pane" stylesheets="@congratulationWindow.css" AnchorPane.bottomAnchor="86.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="64.0">
+      <AnchorPane fx:id="innerPane" focusTraversable="true" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" styleClass="pane" stylesheets="@congratulationWindow.css">
          <children>
             <Label alignment="CENTER" contentDisplay="CENTER" layoutX="92.0" layoutY="14.0" prefHeight="80.0" prefWidth="555.0" text="Congratulations!" textAlignment="CENTER" textFill="WHITE" AnchorPane.leftAnchor="52.5" AnchorPane.rightAnchor="52.5">
                <font>
@@ -36,7 +37,7 @@
                   </ImageView>
                </children>
             </HBox>
-            <HBox alignment="CENTER" layoutX="60.0" layoutY="242.0" prefHeight="60.0" prefWidth="200.0" AnchorPane.leftAnchor="60.0" AnchorPane.rightAnchor="60.0">
+            <HBox alignment="CENTER" layoutX="84.0" layoutY="246.0" prefHeight="60.0" prefWidth="200.0" AnchorPane.leftAnchor="84.0" AnchorPane.rightAnchor="84.0">
                <children>
                   <Button fx:id="closeButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#clickOnCloseButton" prefHeight="70.0" prefWidth="170.0" text="Quit" textFill="WHITE">
                      <font>
@@ -46,6 +47,9 @@
                </children>
             </HBox>
          </children>
+         <HBox.margin>
+            <Insets bottom="445.0" top="245.0" />
+         </HBox.margin>
       </AnchorPane>
    </children>
-</AnchorPane>
+</HBox>

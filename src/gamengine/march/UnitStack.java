@@ -4,7 +4,7 @@ import gamengine.battle.BattleUnitStack;
 import gamengine.unit.Unit;
 
 public class UnitStack {
-    public static final int MAX_UNITS_NUM = 999999;
+    public static final int MAX_UNITS_NUM = 1000;
     private final Unit unitClass;
     private final int armyIndex;
     private final int HP;

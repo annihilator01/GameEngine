@@ -4,9 +4,7 @@ import gamengine.unit.Unit;
 import gamengine.march.UnitStack;
 import javafx.scene.layout.HBox;
 
-import java.text.DecimalFormat;
-import java.text.Normalizer;
-import java.util.Formatter;
+import java.util.Locale;
 
 public class BattleUnitStack implements Comparable<BattleUnitStack> {
     private final Unit unitClass;
@@ -92,7 +90,7 @@ public class BattleUnitStack implements Comparable<BattleUnitStack> {
 
     /* for tableView in BattleSceneController */
     public Double getInitiative() {
-        return initiativeChange + unitClass.getInitiative();
+        return getFormattedValue(unitClass.getInitiative() + initiativeChange);
     }
 
     public String getType() {
@@ -151,12 +149,22 @@ public class BattleUnitStack implements Comparable<BattleUnitStack> {
                 "\tUnit Class: " + unitClass.getType() + '\n' +
                 "\tOverall HP: " + HP + '\n' +
                 "\tOne unit HP: " + unitClass.getHP() + '\n' +
-                "\tAttack: " + (unitClass.getAttack() + attackChange) + '\n' +
-                "\tDamage: " + unitClass.getDamage().getMin() + "-" + unitClass.getDamage().getMax() + '\n' +
-                "\tDefense: " + (unitClass.getDefense() + defenseChange) + '\n' +
+                "\tAttack: " + getFormattedValue(unitClass.getAttack() + attackChange) + '\n' +
+                "\tDamage: " + getFormattedValue(unitClass.getDamage().getMin()) + "-" + getFormattedValue(unitClass.getDamage().getMax()) + '\n' +
+                "\tDefense: " + getFormattedValue(unitClass.getDefense() + defenseChange) + '\n' +
                 "\tInitiative: " + getInitiative() + '\n' +
                 "\tPassive Skills: " + ((!unitClass.getPassiveSkills().isEmpty()) ? unitClass.getPassiveSkills().toString() : "None") + '\n' +
                 "\tActive Skill: " + ((unitClass.getActiveSkill() != null ) ? unitClass.getActiveSkill().getTitle() : "None");
+    }
+
+    private Double getFormattedValue(double value) {
+        String decimal = ((Double) (value)).toString().split("\\.")[1];
+
+        if (decimal.length() > 3) {
+            return Double.parseDouble(String.format(Locale.US, "%.3f", value));
+        } else {
+            return value;
+        }
     }
 
     @Override

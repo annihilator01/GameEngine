@@ -188,7 +188,7 @@ public class Battle {
             actor.getUnitClass().getPassiveSkills().contains(PassiveSkills.ENEMYNOTRESIST) ||
             target.getUnitClass().getPassiveSkills().contains(PassiveSkills.SHOOTER) ||
             target.hasResisted() || target.isDead()) {
-            if (!actor.getUnitClass().getPassiveSkills().contains(PassiveSkills.ATTACKALL)) {
+            if (!actor.getUnitClass().getPassiveSkills().contains(PassiveSkills.ATTACKALL) || isCounterAttack) {
                 initiativeScale.remove(0);
             }
             return;

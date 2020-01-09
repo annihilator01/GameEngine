@@ -11,6 +11,7 @@
     -fx-border-radius: 80px;
     -fx-border-color: deeppink;
     -fx-border-width: 5px;
+    -fx-border-insets: -1;
     -fx-effect: dropshadow(gaussian, black, 90, 0.5, 0, 0);
 }
 

@@ -28,6 +28,7 @@ public class Interface extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
         mainWindow = primaryStage;
         Parent root = FXMLLoader.load(getClass().getResource("/gui/startscene/startScene.fxml"));
 
@@ -35,6 +36,7 @@ public class Interface extends Application {
         primaryStage.setScene(scene);
         primaryStage.setTitle("Heroes");
         primaryStage.getIcons().add(new Image("/gui/assets/icon.png"));
+        primaryStage.setResizable(false);
 
         primaryStage.show();
     }

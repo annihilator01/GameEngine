@@ -18,6 +18,7 @@
     -fx-border-color: gold;
     -fx-border-radius: 30;
     -fx-border-width: 2.3px;
+    -fx-border-insets: -1;
     -fx-background-radius: 30;
 }
 

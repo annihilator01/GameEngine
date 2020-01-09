@@ -1,18 +1,12 @@
 package gui.startscene;
 
-import gamengine.UnitLoader;
-import gamengine.unit.Unit;
 import gui.Interface;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-
-import java.io.File;
 
 public class StartSceneController {
     @FXML private Button startButton;

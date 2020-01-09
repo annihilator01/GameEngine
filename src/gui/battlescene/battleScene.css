@@ -32,6 +32,7 @@
     -fx-border-color: -common-color;
     -fx-border-width: 3px;
     -fx-border-radius: 20;
+    -fx-border-insets: -1;
 }
 
 .scale .placeholder {
@@ -119,6 +120,7 @@
     -fx-border-color: darkorchid;
     -fx-border-radius: 30;
     -fx-border-width: 3px;
+    -fx-border-insets: -1;
     -fx-background-radius: 30;
     -fx-background-color: rgba(30,144,255,0.8);
 }
@@ -249,14 +251,29 @@
     -fx-text-fill: rgba(81,179,179,1);
 }
 
-/* info window */
+/* round info */
 .info {
-    -fx-background-color: #4dfa21;
+    -fx-background-color: palegreen;
     -fx-border-color: rgba(250,33,78,1);
     -fx-text-fill: rgba(250,33,78,1);
     -fx-font-family: "Berlin Sans FB Demi";
     -fx-font-size: 65px;
     -fx-background-radius: 20;
     -fx-border-radius: 20;
-    -fx-border-width: 7px;
+    -fx-border-width: 10px;
+    -fx-border-insets: -2;
+}
+
+/* change element */
+.change-pos, .change-neg {
+    -fx-font-family: "Berlin Sans FB Demi";
+    -fx-font-size: 70px;
+}
+
+.change-pos {
+    -fx-text-fill: lime;
+}
+
+.change-neg {
+    -fx-text-fill: red;
 }

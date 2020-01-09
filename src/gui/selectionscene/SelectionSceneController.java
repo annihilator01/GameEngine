@@ -1,7 +1,6 @@
 package gui.selectionscene;
 
 import java.io.IOException;
-import java.net.Inet4Address;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -25,7 +24,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
 
 public class SelectionSceneController {
     private UnitLoader unitLoader;
@@ -55,11 +53,14 @@ public class SelectionSceneController {
     private void clickOnAcceptButton() {
         String name1 = nameField1.getText().equals("") ? Interface.DEFAULT_PLAYER_NAME_1 : nameField1.getText();
         String name2 = nameField2.getText().equals("") ? Interface.DEFAULT_PLAYER_NAME_2 : nameField2.getText();
-        Army army1 = formArmy(ArmyVBox1, name1, 1);
-        Army army2 = formArmy(ArmyVBox2, name2, 2);
 
-        if (army1 == null || army2 == null) {
-            Interface.displayError("");
+        Army army1 = formArmy(ArmyVBox1, name1, 1);
+        if (army1 == null) {
+            return;
+        }
+
+        Army army2 = formArmy(ArmyVBox2, name2, 2);
+        if (army2 == null) {
             return;
         }
 
@@ -152,6 +153,7 @@ public class SelectionSceneController {
 
     private Army formArmy(VBox mainVBox, String playerName,  int armyIndex) {
         if (mainVBox.getChildren().size() == 1) {
+            Interface.displayError("Battle can't begin without unit stacks on both sides!");
             return null;
         }
 
@@ -163,6 +165,7 @@ public class SelectionSceneController {
 
                 Unit unit = (Unit) ((ComboBox) (unitTypeVBox.getChildren().get(1))).getValue();
                 if (unit == null) {
+                    Interface.displayError("Choose type of units for unit stack!");
                     return null;
                 }
                 String unitType = unit.getType();
@@ -171,9 +174,12 @@ public class SelectionSceneController {
                 try {
                     unitNumber = Integer.parseInt(((TextField) unitNumberVBox.getChildren().get(1)).getText());
                     if (unitNumber <= 0 || unitNumber > UnitStack.MAX_UNITS_NUM) {
-                        throw new Exception();
+                        Interface.displayError("Number of units in unit stack can't be more than " +
+                                                UnitStack.MAX_UNITS_NUM + "!");
+                        return null;
                     }
                 } catch (Exception e) {
+                    Interface.displayError("Number of units for unit stack is not given!");
                     return null;
                 }
 
@@ -185,7 +191,7 @@ public class SelectionSceneController {
     }
 
     private ListCell<Unit> createUnitCell(char armyIndex) {
-        return new ListCell<>() {
+        return new ListCell<Unit>() {
             @Override
             public void updateItem(Unit unit, boolean empty) {
                 super.updateItem(unit, empty);

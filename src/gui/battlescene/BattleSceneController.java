@@ -29,7 +29,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
-import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
@@ -38,6 +37,7 @@ import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class BattleSceneController {
     private final double DEFAULT_NAME_LABLE_HEIGHT = 60;
@@ -290,7 +290,6 @@ public class BattleSceneController {
         stage.show();
 
         ScaleTransition increaseTransition = new ScaleTransition(Duration.seconds(1.5), label);
-        increaseTransition.setDelay(new Duration(500));
         increaseTransition.setFromX(0);
         increaseTransition.setFromY(0);
         increaseTransition.setToX(1);
@@ -328,8 +327,35 @@ public class BattleSceneController {
             }
         }
 
+        BattleArmy targetBattleArmy = (actor.getArmyIndex() == 2) ?
+                                       battle.getBattleArmy1() : battle.getBattleArmy2();
+
+        int beforeActorHP = actor.getHP();
+        ArrayList<Integer> beforeTargetsHP = new ArrayList<>(){{
+            for (BattleUnitStack target: targetBattleArmy.getBattleArmy()) {
+                add(target.getHP());
+            }
+        }};
+
         battle.attack(actor, target);
+
         afterActionHandler(actor, target, Actions.ATTACK);
+
+        // show hp change
+        for (int i = 0; i < targetBattleArmy.getBattleArmy().size(); i++) {
+            healthPointsHandler(targetBattleArmy.getBattleArmy().get(i), beforeTargetsHP.get(i));
+        }
+        healthPointsHandler(actor, beforeActorHP);
+    }
+
+    private void healthPointsHandler(BattleUnitStack battleUnitStack, int beforeHP) {
+        int changeHP = beforeHP - battleUnitStack.getHP();
+
+        if (changeHP == 0) {
+            return;
+        }
+
+        showChange(battleUnitStack.getBattleHBox(), -changeHP, "/gui/assets/heart.png");
     }
 
     @FXML
@@ -347,14 +373,16 @@ public class BattleSceneController {
 
         battle.defend(actor);
         afterActionHandler(actor, Actions.DEFENSE);
+        showChange(actor.getBattleHBox(), actor.getDefenseChange(), "/gui/assets/defense.png");
     }
 
     @FXML
     private void clickOnActiveSkillButton() {
         BattleUnitStack actor = battle.getCurrentMoveUnitsStack();
         BattleUnitStack target = findBattleUnitStack(selectedHBox);
+        ActiveSkills actorActiveSkill = actor.getUnitClass().getActiveSkill();
 
-        if (actor.getUnitClass().getActiveSkill() == null) {
+        if (actorActiveSkill == null) {
             Interface.displayError("Current unit stack doesn't have any active skills!");
             return;
         } else if (selectedHBox == null) {
@@ -363,10 +391,13 @@ public class BattleSceneController {
         } else if (actor.getNumberActiveSkillUsed() == Battle.MAX_USE_OF_ACTIVE_SKILL) {
             Interface.displayError("Active Skill can't be used more than " + Battle.MAX_USE_OF_ACTIVE_SKILL + " times during the battle!");
             return;
+        } else if (!actorActiveSkill.isPositive() && actorActiveSkill.getChangeParameter().getValue(target).equals(0)) {
+            Interface.displayError("Active Skill can't decrease characteristics value below zero!");
+            return;
         }
 
         // resurrection case handling
-        if (actor.getUnitClass().getActiveSkill() == ActiveSkills.RESURRECTION) {
+        if (actorActiveSkill == ActiveSkills.RESURRECTION) {
             if (!target.getUnitClass().getPassiveSkills().contains(PassiveSkills.UNDEAD)) {
                 Interface.displayError("Resurrection active skill can't be used on not Undead units!");
                 return;
@@ -376,8 +407,23 @@ public class BattleSceneController {
             }
         }
 
+        // before battle characteristics
+        Number beforeTargetValue = actorActiveSkill.getChangeParameter().getValue(target);
+
         battle.useActiveSkill(actor, target);
         afterActionHandler(actor, target, Actions.ACTIVESKILL);
+        activeSkillHandler(target, actorActiveSkill, beforeTargetValue);
+    }
+
+    private void activeSkillHandler(BattleUnitStack target, ActiveSkills activeSkill, Number before) {
+        Number after = activeSkill.getChangeParameter().getValue(target);
+        Number change = after.doubleValue() - before.doubleValue();
+
+        if (before instanceof Integer) {
+            showChange(target.getBattleHBox(), change.intValue(), activeSkill.getImageURL());
+        } else {
+            showChange(target.getBattleHBox(), change.doubleValue(), activeSkill.getImageURL());
+        }
     }
 
     @FXML
@@ -395,15 +441,11 @@ public class BattleSceneController {
 
         battle.wait(actor);
         afterActionHandler(actor, Actions.WAIT);
+        showChange(actor.getBattleHBox(), 0, "/gui/assets/wait.png");
     }
 
     @FXML
     private void clickOnGiveUpButton() {
-        if (true) {
-            showChange(selectedHBox, 22, "/gui/assets/attack.png");
-            return;
-        }
-
         if (selectedHBox != null) {
             Interface.displayError("Giving Up doesn't require target!");
             return;
@@ -495,7 +537,12 @@ public class BattleSceneController {
                 stage.initModality(Modality.WINDOW_MODAL);
                 stage.initOwner(Interface.getMainWindow());
                 stage.setScene(scene);
-                stage.showAndWait();
+                stage.show();
+
+                TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(1), parent);
+                translateTransition.setFromY( (-1) * parent.getLayoutBounds().getHeight() / 2 );
+                translateTransition.setToY(0);
+                translateTransition.play();
                 return;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -547,7 +594,7 @@ public class BattleSceneController {
         final String activeSkillTooltip = tmpActiveSkillTooltip;
 
 
-        ArrayList<Tooltip> tooltips = new ArrayList<>(){{
+        ArrayList<Tooltip> tooltips = new ArrayList<Tooltip>(){{
             add(new Tooltip(attackTooltip)); // for attack
             add(new Tooltip("Defense: actor skips the turn (doesn't play in this round)\nand increases own defense by 30%")); // for defense
             add(new Tooltip(activeSkillTooltip)); // for active skill
@@ -594,41 +641,70 @@ public class BattleSceneController {
             System.exit(-1);
         }
 
-        String styleClass = (change.doubleValue() > 0) ? "change-pos" : "change-neg";
-        String sign = (change.doubleValue() > 0) ? "+" : "";
+        if (change instanceof Double) {
+            change = getFormattedValue(change.doubleValue());
+        }
 
+        String styleClass = (change.doubleValue() > 0) ? "change-pos" : "change-neg";
+        String signStr = (change.doubleValue() > 0) ? "+" : "";
+        int signInt = (int) (change.doubleValue() / Math.abs(change.doubleValue()));
+        Image trendImageTemplate = (change.doubleValue() > 0) ?
+                                    new Image("/gui/assets/green_up.png") :
+                                    new Image("/gui/assets/red_down.png");
+
+        // set label text
         Label changeLabel = (Label) changeHBox.getChildren().get(0);
-        changeLabel.setText(sign + change);
+        changeLabel.setText(signStr + change);
+        changeLabel.getStylesheets().add(getClass().getResource("battleScene.css").toExternalForm());
         changeLabel.getStyleClass().add(styleClass);
 
+        // set trend image
         ImageView trendImage = (ImageView) changeHBox.getChildren().get(1);
+        trendImage.setImage(trendImageTemplate);
+        trendImage.setScaleX(0.8); trendImage.setScaleY(0.8);
 
+        // set changed characteristic image
         ImageView characteristicImage = (ImageView) changeHBox.getChildren().get(2);
         characteristicImage.setImage(new Image(imageURL));
 
-        ((AnchorPane) Interface.getMainWindow().getScene().getRoot()).getChildren().add(changeHBox);
-        Bounds targetHBoxBounds = targetHBox.getParent().localToParent(targetHBox.getBoundsInParent());
-        changeHBox.setLayoutX(targetHBoxBounds.getMinX() + targetHBox.getWidth() / 2);
-        changeHBox.setLayoutY(targetHBoxBounds.getMinY());
+        // check if func got wait action
+        if (change.doubleValue() == 0) {
+            changeHBox.getChildren().remove(0, 2);
+            signInt = 1;
+        }
 
-        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(2), changeHBox);
+        // locate change box on the scene
+        ((AnchorPane) Interface.getMainWindow().getScene().getRoot()).getChildren().add(changeHBox);
+        Interface.getMainWindow().getScene().getRoot().applyCss();
+        Interface.getMainWindow().getScene().getRoot().layout();
+        Bounds targetHBoxBounds = targetHBox.localToScene(targetHBox.getLayoutBounds());
+        changeHBox.setLayoutX(targetHBoxBounds.getMinX() + (targetHBox.getWidth() - changeHBox.getWidth()) / 2);
+        changeHBox.setLayoutY(targetHBoxBounds.getMinY() - signInt * changeHBox.getHeight() / 2);
+
+        // set transitions
+        TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(5));
+        translateTransition.setToY(signInt * (-200));
+
+        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(3));
         fadeTransition.setFromValue(1);
         fadeTransition.setToValue(0);
-        fadeTransition.play();
 
-        Line line = new Line();
-        //Bounds targetHBoxBounds = targetHBox.getParent().localToParent(targetHBox.getBoundsInParent());
-        line.setStartX(targetHBoxBounds.getMinX() + targetHBox.getWidth() / 2);
-        line.setStartY(targetHBoxBounds.getMinY());
-        line.setEndX(targetHBoxBounds.getMinX() + targetHBox.getWidth() / 2);
-        line.setEndY(targetHBoxBounds.getMinY() - 200);
+        ParallelTransition parallelTransition = new ParallelTransition(changeHBox, translateTransition, fadeTransition);
+        parallelTransition.play();
 
-        PathTransition pathTransition = new PathTransition(Duration.seconds(2), line, changeHBox);
-        pathTransition.play();
 
         final HBox finalChangeHBox = changeHBox;
-        pathTransition.setOnFinished(actionEvent -> {
-            ((AnchorPane) finalChangeHBox.getScene().getRoot()).getChildren().remove(finalChangeHBox);
-        });
+        parallelTransition.setOnFinished(actionEvent -> ((AnchorPane) finalChangeHBox.getScene().getRoot()).getChildren().remove(finalChangeHBox));
     }
+
+    private Double getFormattedValue(double value) {
+        String decimal = ((Double) (value)).toString().split("\\.")[1];
+
+        if (decimal.length() > 3) {
+            return Double.parseDouble(String.format(Locale.US, "%.3f", value));
+        } else {
+            return value;
+        }
+    }
+
 }
