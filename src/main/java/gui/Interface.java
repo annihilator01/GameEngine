@@ -30,7 +30,7 @@ public class Interface extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         mainWindow = primaryStage;
-        Parent root = FXMLLoader.load(getClass().getResource("/gui/startscene/startScene.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("startscene/startScene.fxml"));
 
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
