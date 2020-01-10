@@ -18,15 +18,14 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.ScrollEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.text.Font;
@@ -71,6 +70,7 @@ public class BattleSceneController {
 
     @FXML
     private void initialize() throws Exception {
+
         battle = Interface.getBattle();
         roundNumber = 0;
 
@@ -103,7 +103,6 @@ public class BattleSceneController {
         nameLabel.getStyleClass().add("title-" + titleIndex);
 
         setTextToFitSize(nameLabel, title);
-
         mainVBox.getChildren().add(nameLabel);
     }
 
@@ -115,7 +114,10 @@ public class BattleSceneController {
         tmpText.setFont(new Font(labelFontFamily, labelFontSize));
 
         double textWidth = tmpText.getLayoutBounds().getWidth();
-        double labelWidth = label.getPrefWidth();
+        double labelWidth = 0;
+        try {
+            labelWidth = ((HBox) FXMLLoader.load(getClass().getResource("unitStackHBox.fxml"))).getPrefWidth();
+        } catch (Exception ignored) {}
 
         if (textWidth <= labelWidth) {
             label.setText(text);
@@ -556,6 +558,11 @@ public class BattleSceneController {
         // check if new round is started
         if (battle.getInitiativeScale().isEmpty()) {
             battle.createInitiativeScale();
+
+            for (BattleUnitStack battleUnitStack: battle.getAllBattleUnitStacks()) {
+                battleUnitStack.resetResisted();
+            }
+
             showNewRoundInfo();
         }
 

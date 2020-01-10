@@ -17,6 +17,7 @@ public class BattleUnitStack implements Comparable<BattleUnitStack> {
     private HBox battleHBox;
     private int HP;
     private int numberActiveSkillUsed;
+
     public BattleUnitStack(UnitStack unitsStack) {
         this.unitClass = unitsStack.getUnitClass();
         this.initialUnitsNumber = unitsStack.getUnitsNumber();
@@ -141,6 +142,10 @@ public class BattleUnitStack implements Comparable<BattleUnitStack> {
 
     public void resisted() {
         hasResisted = true;
+    }
+
+    public void resetResisted() {
+        hasResisted = false;
     }
 
     @Override

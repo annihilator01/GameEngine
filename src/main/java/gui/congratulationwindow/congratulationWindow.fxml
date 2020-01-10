@@ -9,24 +9,23 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-
 <HBox alignment="CENTER" prefHeight="1040.0" prefWidth="1920.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.congratulationwindow.CongratulationWindowController">
    <children>
-      <AnchorPane fx:id="innerPane" focusTraversable="true" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" styleClass="pane" stylesheets="@congratulationWindow.css">
+      <AnchorPane fx:id="innerPane" focusTraversable="true" maxWidth="1880.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" styleClass="pane" stylesheets="@congratulationWindow.css">
          <children>
             <Label alignment="CENTER" contentDisplay="CENTER" layoutX="92.0" layoutY="14.0" prefHeight="80.0" prefWidth="555.0" text="Congratulations!" textAlignment="CENTER" textFill="WHITE" AnchorPane.leftAnchor="52.5" AnchorPane.rightAnchor="52.5">
                <font>
                   <Font name="Berlin Sans FB Demi Bold" size="70.0" />
                </font>
             </Label>
-            <HBox fx:id="nameHBox" alignment="CENTER" layoutX="7.5" layoutY="130.0" nodeOrientation="LEFT_TO_RIGHT" AnchorPane.leftAnchor="7.5" AnchorPane.rightAnchor="7.5">
+            <HBox fx:id="nameHBox" alignment="CENTER" layoutX="7.5" layoutY="130.0" maxWidth="1880.0" nodeOrientation="LEFT_TO_RIGHT" AnchorPane.leftAnchor="7.5" AnchorPane.rightAnchor="7.5">
                <children>
                   <ImageView fitHeight="95.0" fitWidth="80.0" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../assets/loudspeaker.png" />
                      </image>
                   </ImageView>
-                  <Label fx:id="nameField" alignment="CENTER" text="Label" textAlignment="CENTER" />
+                  <Label fx:id="nameField" alignment="CENTER" maxWidth="1880.0" text="Label" textAlignment="CENTER" />
                   <ImageView fitHeight="95.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../assets/loudspeaker.png" />
