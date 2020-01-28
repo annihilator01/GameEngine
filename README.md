@@ -6,12 +6,12 @@ Game inspired by “Heroes of Might and Magic” and “Disciples”, which is a
 
 ## Game Process
 ### Start Scene
-<img src="https://drive.google.com/uc?id=1KbodVuD2IRSzSRpEn8SoKT_G1d-iThem" width="700">
+<img src="https://i.imgur.com/pbjZSxK.png" width="700">
 
 ***
 
 ### Selection Scene
-<img src="https://drive.google.com/uc?id=1KwrXW8vkQkFJObq96qf7ChqTBJ7-MZCo" width="700">
+<img src="https://i.imgur.com/i0ehAm6.png" width="700">
 Here you can choose player names, number of unit stacks (from 1 to 6), type of units in each unit stack, number of units in each unit stack (from 1 to 1000).
 <br/>Also, if you want to delete one unit stack you should right-click on it.
 
@@ -46,7 +46,7 @@ for every unit that conjures (resurrection can't restore more hp than it was in 
 ***
 
 ### Battle Scene
-<img src="https://drive.google.com/uc?id=1ZaLK5DlD3RdAflImopWvKQPzUlF8u5Pu" width="900">
+<img src="https://i.imgur.com/MIdHSoK.png" width="900">
 Here armies of two players are fighting each other. Almost every element of the scene has its own tooltip<br/><br/>
 
 💚 **Green** highlighted unit stack ***(actor)*** is an unit stack, that can make a move right now.
