@@ -13,7 +13,7 @@ Game inspired by “Heroes of Might and Magic” and “Disciples”, which is a
 ### Selection Scene
 <img src="https://i.imgur.com/i0ehAm6.png" width="700">
 Here you can choose player names, number of unit stacks (from 1 to 6), type of units in each unit stack, number of units in each unit stack (from 1 to 1000).
-<br/>There are 11 base types of units in the game, but you can add your custom types creating folder 'mods/' in the same folder with .jar file of the game. This folder must contain .json file with information about custom type and image of this type (optional). Example of such .json files [here](https://github.com/annihilator01/GameEngine/releases/tag/1.1). 
+<br/>There are 11 base types of units in the game, but you can add your custom types creating folder 'mods/' in the same folder with .jar file of the game. This folder must contain .json file with information about custom type and image of this type (optional). Example of such .json files <a href="https://github.com/annihilator01/GameEngine/releases/tag/1.0">here</a>. 
 <br/>Also, if you want to delete one unit stack you should right-click on it.
 
 <br/>Each unit has some characteristics (list of them below).
